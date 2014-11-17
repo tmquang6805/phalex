@@ -33,7 +33,7 @@ class Config
             ->getConfigApp()
             ->merge()
             ->setConfigToCache()
-            ->getCofig();
+            ->getConfig();
     }
 
 }
