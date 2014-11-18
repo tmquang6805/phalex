@@ -12,8 +12,7 @@ use PhalconExt\Config\Config;
 
 class Application
 {
-
-    public function __construct (array $config)
+    public function __construct(array $config)
     {
         $config = (new Config($config))
             ->getConfig();
@@ -33,7 +32,7 @@ class Application
 //        return $result;
 //    }
 
-    public function run ()
+    public function run()
     {
         echo 'Run project';
     }

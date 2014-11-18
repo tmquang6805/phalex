@@ -8,32 +8,25 @@
 
 namespace PhalconExt\Config;
 
-
 class Config
 {
-
     private $config;
 
-    public function __construct (array $config)
+    public function __construct(array $config)
     {
-
     }
 
-    public function getConfig ()
+    public function getConfig()
     {
-        if ($this->config) {
-            return $this->config;
-        }
-
         if (($this->config = $this->getConfigFromCache()) !== false) {
             return $this->config;
         }
 
-        return $this->getConfigModules()
+        $this->getConfigModules()
             ->getConfigApp()
             ->merge()
-            ->setConfigToCache()
-            ->getConfig();
-    }
+            ->setConfigToCache();
 
+        return $this->config;
+    }
 }
