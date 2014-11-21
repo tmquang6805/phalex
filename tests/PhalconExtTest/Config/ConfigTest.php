@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Created by PhpStorm.
+ * User: quangtm
+ * Date: 19/11/2014
+ * Time: 00:50
+ */
+
+namespace PhalconExtTest;
+
+use PHPUnit_Framework_TestCase as TestCase;
+use PhalconExt\Config\Config;
+
+class ConfigTest extends TestCase
+{
+
+    public function testGetConfig()
+    {
+        $config = (new Config([]))
+                ->getConfig();
+        $this->assertInternalType('array', $config);
+    }
+
+}
