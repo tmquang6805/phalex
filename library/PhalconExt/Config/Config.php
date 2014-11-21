@@ -11,18 +11,19 @@ namespace PhalconExt\Config;
 
 class Config
 {
-
     /**
      *
      * @var array
      */
-    private $modules;
+    protected $config;
 
     public function __construct(array $config)
     {
         if (!$this->isValidConfig($config)) {
             throw new Exception\InvalidArgumentException('Invalid config for Phalcon Extension');
         }
+
+        $this->config = $config;
     }
 
     /**
@@ -35,10 +36,10 @@ class Config
         $requiredKeys = [
             'modules'               => 1,
             'autoload_module_paths' => 1,
-            'config_glob_paths'     => 1
+            'config_glob_paths'     => 1,
         ];
-        unset($config['cache_config'], $config['cache_module']);
-        if (count(array_diff_key($requiredKeys, $config))) {
+
+        if (count($requiredKeys) != count(array_intersect_key($requiredKeys, $config))) {
             return false;
         }
 
@@ -61,7 +62,22 @@ class Config
 
     private function getConfigFromCache()
     {
-        return false;
+        if (!isset($this->config['cache_config'])) {
+            return false;
+        }
+
+        $cacheConfig = $this->config['cache_config'];
+        if (!isset($cacheConfig['enable']) || !$cacheConfig['enable']) {
+            return false;
+        }
+
+        $className = __NAMESPACE__ . '\\Cache\\' . ucfirst(strtolower($cacheConfig['adapter']));
+        if (!class_exists($className)) {
+            throw new Exception\RuntimeException("Adapter for caching config is not support. Please check it again");
+        }
+
+        return (new $className($cacheConfig['options']))
+                        ->getConfig();
     }
 
     private function getConfigModules()
@@ -83,5 +99,4 @@ class Config
     {
         return $this;
     }
-
 }

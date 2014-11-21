@@ -14,12 +14,8 @@ use PhalconExt\Config\Config;
 
 class ConfigTest extends TestCase
 {
-
-    public function testGetConfig()
+    public function testConstructRaiseException()
     {
-        $config = (new Config([]))
-                ->getConfig();
-        $this->assertInternalType('array', $config);
+        
     }
-
 }

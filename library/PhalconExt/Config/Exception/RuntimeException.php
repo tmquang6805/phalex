@@ -9,11 +9,11 @@
 namespace PhalconExt\Config\Exception;
 
 /**
- * Description of InvalidArgumentException
+ * Description of RuntimeException
  *
  * @author quangtm
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class RuntimeException extends \RuntimeException
 {
     //put your code here
 }
