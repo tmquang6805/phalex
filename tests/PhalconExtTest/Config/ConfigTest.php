@@ -10,7 +10,7 @@
 namespace PhalconExtTest;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use PhalconExt\Config\Config;
+use Phalcon\Extension\Config\Config;
 
 class ConfigTest extends TestCase
 {

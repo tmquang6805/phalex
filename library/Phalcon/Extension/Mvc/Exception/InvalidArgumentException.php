@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace PhalconExt\Config\Exception;
+namespace Phalcon\Extension\Mvc\Exception;
 
 /**
  * Description of InvalidArgumentException
