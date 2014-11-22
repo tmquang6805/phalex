@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace PhalconExt\Config\Exception;
+namespace Phalcon\Extension\Mvc\Module;
 
 /**
- * Description of RuntimeException
+ * Description of AbstractModule
  *
  * @author quangtm
  */
-class RuntimeException extends \RuntimeException
+abstract class AbstractModule
 {
-    //put your code here
+    abstract public function getConfig();
 }
