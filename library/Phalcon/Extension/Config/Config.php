@@ -18,7 +18,13 @@ class Config
      *
      * @var array
      */
-    protected $initParams;
+    protected $modules;
+
+    /**
+     *
+     * @var array
+     */
+    protected $globPaths;
 
     /**
      *
@@ -26,37 +32,12 @@ class Config
      */
     protected $cache;
 
-    public function __construct(array $params, Cache\CacheInterface $cache = null)
+    public function __construct(array $modules, array $globPaths, Cache\CacheInterface $cache = null)
     {
-        if (!$this->isValidConfig($params)) {
-            throw new Exception\InvalidArgumentException('Invalid config for Phalcon Extension');
-        }
-
-        $this->initParams = $params;
-        $this->cache      = $cache;
-        $this->configs    = [
-            'application' => [],
-            'modules'     => [],
-        ];
-    }
-
-    /**
-     * Validate config data for init phalcon extension
-     * @param  array   $config
-     * @return boolean
-     */
-    private function isValidConfig(array $config)
-    {
-        $requiredKeys = [
-            'modules'           => 1,
-            'config_glob_paths' => 1,
-        ];
-
-        if (count($requiredKeys) != count(array_intersect_key($requiredKeys, $config))) {
-            return false;
-        }
-
-        return true;
+        $this->modules   = $modules;
+        $this->globPaths = $globPaths;
+        $this->cache     = $cache;
+        $this->configs   = [];
     }
 
     /**
@@ -66,7 +47,7 @@ class Config
      */
     public function getConfig()
     {
-        if (($this->configs = $this->cache->getConfig()) !== false) {
+        if ($this->cache instanceof Cache\CacheInterface && ($this->configs = $this->cache->getConfig()) !== false) {
             return $this->configs;
         }
 
@@ -80,7 +61,7 @@ class Config
 
     private function getConfigModules()
     {
-        foreach ($this->initParams['modules'] as $moduleName) {
+        foreach ($this->modules as $moduleName) {
             $moduleClass = $moduleName . '\\Module';
             $module      = new $moduleClass();
             if ($module instanceof AbstractModule) {
