@@ -8,12 +8,26 @@
 
 namespace Phalcon\Extension\Mvc\Module;
 
+use Phalcon\Mvc\ModuleDefinitionInterface;
+
 /**
  * Description of AbstractModule
  *
  * @author quangtm
  */
-abstract class AbstractModule
+abstract class AbstractModule implements ModuleDefinitionInterface
 {
+
     abstract public function getConfig();
+
+    public function registerAutoloaders()
+    {
+        
+    }
+
+    public function registerServices($dependencyInjector)
+    {
+        
+    }
+
 }

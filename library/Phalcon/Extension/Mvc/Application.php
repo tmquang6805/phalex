@@ -9,6 +9,8 @@
 
 namespace Phalcon\Extension\Mvc;
 
+use Phalcon\Extension\Mvc\Module;
+use Phalcon\Extension\Mvc\Module\Cache as CacheModule;
 use Phalcon\Extension\Config\Config;
 use Phalcon\Extension\Config\Cache as CacheConf;
 
@@ -17,18 +19,44 @@ class Application
 
     public function __construct(array $config)
     {
-        $cacheConfigInstance = !isset($config['cache_config']) ? null : $this->getCacheConfig($config['cache_config']);
+        $cacheModule       = !isset($config['cache_module']) ? null : $this->getCacheModule($config['cache_module']);
+        $registeredModules = (new Module($config['modules'], $config['autoload_module_paths'], $cacheModule))
+                ->getRegisteredModules();
 
-        /**
-         * @todo Autoload register modules
-         */
-        $init = [
-            'modules'           => $this->getModules($config['modules']),
-            'config_glob_paths' => $config['config_glob_paths']
-        ];
-
-        $config = (new Config($init, $cacheConfigInstance))
+        $cacheConfig = !isset($config['cache_config']) ? null : $this->getCacheConfig($config['cache_config']);
+        $appConfig   = (new Config($config['modules'], $config['config_glob_paths'], $cacheConfig))
                 ->getConfig();
+    }
+
+    /**
+     * Get cache instance for config or module
+     * @param array $config
+     * @param string $namespace
+     * @param string $errMsg
+     * @return null|object
+     * @throws Exception\RuntimeException
+     */
+    private function getCacheInstance(array $config, $namespace, $errMsg)
+    {
+        if (!isset($config['enable']) || !$config['enable']) {
+            return null;
+        }
+
+        $className = $namespace . '\\' . ucfirst(strtolower($config['adapter']));
+        if (!class_exists($className)) {
+            throw new Exception\RuntimeException($errMsg);
+        }
+        return new $className($config['options']);
+    }
+
+    /**
+     * 
+     * @param array $config
+     * @return null|\Phalcon\Extension\Mvc\Module\Cache\CacheInterface
+     */
+    private function getCacheModule(array $config)
+    {
+        return $this->getCacheInstance($config, CacheModule::class, sprintf('Adapter "%s" is not supported for caching modules', $config['adapter']));
     }
 
     /**
@@ -38,37 +66,7 @@ class Application
      */
     private function getCacheConfig(array $config)
     {
-        if (!$config['enable']) {
-            return null;
-        }
-
-        $className = CacheConf::class . '\\' . ucfirst(strtolower($config['adapter']));
-        if (!class_exists($className)) {
-            throw new Exception\RuntimeException(sprintf('Adapter "%s" is not supported for caching configuration', $config['adapter']));
-        }
-        return new $className($config['options']);
-    }
-
-    /**
-     * Init registered module
-     * @param array $moduleNames
-     * @return array
-     */
-    private function getModules(array $moduleNames)
-    {
-        if (empty($moduleNames)) {
-            throw new Exception\InvalidArgumentException('Invalid registered modules');
-        }
-
-        $modules = [];
-        foreach ($moduleNames as $moduleName) {
-            $moduleClass = $moduleName . '\\Module';
-            $module      = new $moduleClass();
-            if ($module instanceof AbstractModule) {
-                array_push($modules, $module);
-            }
-        }
-        return $modules;
+        return $this->getCacheInstance($config, CacheConf::class, sprintf('Adapter "%s" is not supported for caching configuration', $config['adapter']));
     }
 
     public function run()
