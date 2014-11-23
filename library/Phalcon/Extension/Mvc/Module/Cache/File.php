@@ -20,5 +20,10 @@ class File implements CacheInterface
     {
         
     }
+    
+    public function getAutoloadModulesConfig()
+    {
+        
+    }
 
 }

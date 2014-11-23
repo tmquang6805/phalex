@@ -15,4 +15,5 @@ namespace Phalcon\Extension\Mvc\Module\Cache;
 interface CacheInterface
 {
     public function getRegisteredModules();
+    public function getAutoloadModulesConfig();
 }
