@@ -22,7 +22,8 @@
     },
     "require-dev" : {
         "fabpot/php-cs-fixer" : "1.0",
-        "phpunit/PHPUnit" : "~4.3"
+        "phpunit/PHPUnit" : "~4.3",
+        "mockery/mockery" : "*"
     },
     "autoload" : {
         "psr-4" : {
