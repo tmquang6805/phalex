@@ -55,6 +55,9 @@ class Module
      */
     private function loadModules(array $modules, $paths)
     {
+        if (empty($modules) || empty($paths)) {
+            throw new Exception\InvalidArgumentException('Invalid parameters for init phalcon extesion');
+        }
         foreach ($modules as $moduleName) {
             $moduleClass = $moduleName . '\\Module';
             if (!class_exists($moduleClass)) {
@@ -76,13 +79,12 @@ class Module
             $modulePath = $path . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'Module.php';
             if (file_exists($modulePath)) {
                 require_once $modulePath;
+                $found = true;
 
                 $this->modules[$moduleName] = [
                     'className' => $moduleName . '\\Module',
                     'path'      => $modulePath,
                 ];
-
-                $found = true;
                 break;
             }
         }
@@ -107,7 +109,7 @@ class Module
      * @return array
      * @throws Exception\RuntimeException
      */
-    private function filterModuleConfig($moduleConfig, $moduleName)
+    protected function filterModuleConfig($moduleConfig, $moduleName)
     {
         if (!ArrayUtils::isHashTable($moduleConfig, true)) {
             throw new Exception\RuntimeException(sprintf('The configuration for module "%s" is invalid', $moduleName));
@@ -124,6 +126,15 @@ class Module
         return $moduleConfig;
     }
 
+    protected function setModuleClasses()
+    {
+        $result = [];
+        foreach ($this->modules as $moduleName => $module) {
+            $result[$moduleName] = new $module['className'];
+        }
+        return $result;
+    }
+
     /**
      * Get all module configurations
      * @return array
@@ -132,11 +143,26 @@ class Module
     public function getModulesConfig()
     {
         $result = [];
-        foreach ($this->modules as $moduleName => $module) {
-            $config = (new $module['className'])->getConfig();
+        foreach ($this->setModuleClasses() as $moduleName => $module) {
+            $config = $module->getConfig();
             $result = ArrayUtils::merge($result, $this->filterModuleConfig($config, $moduleName));
         }
         return $result;
+    }
+
+    /**
+     * 
+     * @param array $autoloadConfig
+     * @return array
+     */
+    private function getRealPathAutoloadConfig($autoloadConfig)
+    {
+        foreach ($autoloadConfig as $moduleName => $configAutoload) {
+            foreach ($configAutoload as $key => $value) {
+                $autoloadConfig[$moduleName][$key] = realpath($value);
+            }
+        }
+        return $autoloadConfig;
     }
 
     /**
@@ -151,13 +177,14 @@ class Module
         }
 
         $result = [];
-        foreach ($this->modules as $moduleName => $module) {
-            $autoloadConfig = (new $module['className'])->getAutoloaderConfig();
+        foreach ($this->setModuleClasses() as $moduleName => $module) {
+            $autoloadConfig = $module->getAutoloaderConfig();
             if (!ArrayUtils::isHashTable($autoloadConfig)) {
                 throw new Exception\RuntimeException(sprintf('The autoloader configuration for module "%s" is invalid', $moduleName));
             }
             $result = ArrayUtils::merge($result, $autoloadConfig);
         }
+        $result = $this->getRealPathAutoloadConfig($result);
         return $result;
     }
 

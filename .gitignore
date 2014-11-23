@@ -2,3 +2,5 @@
 /vendor/*
 /composer.lock
 /code-coverage/
+/module/
+/module/*
