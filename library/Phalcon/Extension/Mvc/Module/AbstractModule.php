@@ -19,8 +19,9 @@ abstract class AbstractModule implements ModuleDefinitionInterface
 {
 
     abstract public function getConfig();
+    abstract public function getAutoloaderConfig();
 
-    public function registerAutoloaders()
+    final public function registerAutoloaders()
     {
         
     }
