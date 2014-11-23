@@ -9,23 +9,46 @@
 
 namespace Phalcon\Extension\Mvc;
 
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\DI\FactoryDefault;
 use Phalcon\Extension\Mvc\Module;
 use Phalcon\Extension\Mvc\Module\Cache as CacheModule;
-use Phalcon\Extension\Config\Config;
+use Phalcon\Extension\Config\Config as ConfigHandler;
 use Phalcon\Extension\Config\Cache as CacheConf;
 
 class Application
 {
 
+    /**
+     * @todo Use later
+     * @var EventsManager
+     */
+    protected $eventsManager;
+
     public function __construct(array $config)
     {
         $cacheModule       = !isset($config['cache_module']) ? null : $this->getCacheModule($config['cache_module']);
-        $registeredModules = (new Module($config['modules'], $config['autoload_module_paths'], $cacheModule))
-                ->getRegisteredModules();
+        $moduleHandler     = new Module($config['modules'], $config['autoload_module_paths'], $cacheModule);
+        $registeredModules = $moduleHandler->getRegisteredModules();
+        $auloadModulesConf = $moduleHandler->getModulesAutoloadConfig();
+        $entireAppConf     = $this->getAppConfig($moduleHandler, $config);
+    }
 
-        $cacheConfig = !isset($config['cache_config']) ? null : $this->getCacheConfig($config['cache_config']);
-        $appConfig   = (new Config($config['modules'], $config['config_glob_paths'], $cacheConfig))
-                ->getConfig();
+    /**
+     * Get entire application configuration
+     * @param Module $moduleHandler
+     * @param array $config
+     * @return array
+     */
+    private function getAppConfig(Module $moduleHandler, $config)
+    {
+        $cacheConfig   = !isset($config['cache_config']) ? null : $this->getCacheConfig($config['cache_config']);
+        $modulesConfig = [];
+        if (!$cacheConfig) {
+            $modulesConfig = $moduleHandler->getModulesConfig();
+        }
+//        return (new ConfigHandler($modulesConfig, $config['config_glob_paths'], $cacheConfig))
+//                        ->getConfig();
     }
 
     /**
