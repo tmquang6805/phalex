@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Config\Exception;
+namespace Phalex\Config\Exception;
 
 /**
  * Description of RuntimeException

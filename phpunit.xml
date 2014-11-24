@@ -15,12 +15,12 @@
 
     <testsuites>
         <testsuite name="phalcon_extension_library">
-            <directory suffix="Test.php" phpVersion="5.5">./tests/Phalcon/ExtensionTest</directory>
+            <directory suffix="Test.php" phpVersion="5.5">./tests/PhalexTest</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./library/Phalcon/Extension/</directory>
+            <directory suffix=".php">./library/Phalex</directory>
         </whitelist>
     </filter>
     <logging>

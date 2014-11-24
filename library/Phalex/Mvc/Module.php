@@ -1,8 +1,8 @@
 <?php
 
-namespace Phalcon\Extension\Mvc;
+namespace Phalex\Mvc;
 
-use Phalcon\Extension\Mvc\Module\Cache\CacheInterface;
+use Phalex\Mvc\Module\Cache\CacheInterface;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -12,7 +12,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Module
 {
-
     /**
      *
      * @var array
@@ -32,8 +31,7 @@ class Module
             $this->modules = $cache->getRegisteredModules();
             $this->loadCachedModules();
             $this->cache   = $cache;
-        }
-        else {
+        } else {
             $this->loadModules($modules, array_unique($paths));
         }
     }
@@ -49,7 +47,7 @@ class Module
 
     /**
      * Detect module class is loaded.
-     * If module hasn't been loaded yet, trigger auto load it 
+     * If module hasn't been loaded yet, trigger auto load it
      * @param array $modules
      * @param array $paths
      */
@@ -151,7 +149,7 @@ class Module
     }
 
     /**
-     * 
+     *
      * @param array $autoloadConfig
      * @return array
      */
@@ -187,5 +185,4 @@ class Module
         $result = $this->getRealPathAutoloadConfig($result);
         return $result;
     }
-
 }

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Config\Cache;
+namespace Phalex\Mvc\Module\Cache;
 
 /**
  *
@@ -14,5 +14,6 @@ namespace Phalcon\Extension\Config\Cache;
  */
 interface CacheInterface
 {
-    public function getConfig();
+    public function getRegisteredModules();
+    public function getAutoloadModulesConfig();
 }

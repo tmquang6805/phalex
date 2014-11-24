@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Config\Exception;
+namespace Phalex\Mvc\Exception;
 
 /**
- * Description of InvalidArgumentException
+ * Description of RuntimeException
  *
  * @author quangtm
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class RuntimeException extends \RuntimeException
 {
     //put your code here
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Phalcon\ExtensionTest\Mvc;
+namespace PhalexTest\Mvc;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use Phalcon\Extension\Mvc\Module;
-use Phalcon\Extension\Mvc\Exception\RuntimeException;
-use Phalcon\Extension\Mvc\Exception\InvalidArgumentException;
+use Phalex\Mvc\Module;
+use Phalex\Mvc\Exception\RuntimeException;
+use Phalex\Mvc\Exception\InvalidArgumentException;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -15,7 +15,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
-
     public function testConstructRaiseExptionEmptyParameters()
     {
         $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
@@ -81,5 +80,4 @@ class ModuleTest extends TestCase
         $this->setExpectedException(RuntimeException::class, sprintf('The view path for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesConfig();
     }
-
 }
