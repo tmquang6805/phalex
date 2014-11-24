@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\ExtensionTest\Mvc;
+namespace PhalexTest\Mvc;
 
-use Phalcon\Extension\Mvc\Module;
+use Phalex\Mvc\Module;
 use Mockery as m;
 
 /**
@@ -18,7 +18,6 @@ use Mockery as m;
  */
 class ModuleMock extends Module
 {
-
     protected function setModuleClasses()
     {
         $appMock = m::mock('Application\\Module');
@@ -34,5 +33,4 @@ class ModuleMock extends Module
             'Application' => $appMock,
         ];
     }
-
 }

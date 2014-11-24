@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Mvc\Module\Cache;
+namespace Phalex\Mvc\Module\Cache;
 
 /**
  * Description of File
@@ -15,15 +15,11 @@ namespace Phalcon\Extension\Mvc\Module\Cache;
  */
 class File implements CacheInterface
 {
-
     public function getRegisteredModules()
     {
-        
     }
     
     public function getAutoloadModulesConfig()
     {
-        
     }
-
 }

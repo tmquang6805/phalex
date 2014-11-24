@@ -1,13 +1,12 @@
 <?php
 
-namespace Phalcon\Extension\Config;
+namespace Phalex\Config;
 
-use Phalcon\Extension\Mvc\Module\AbstractModule;
+use Phalex\Mvc\Module\AbstractModule;
 use Phalcon\Config as BaseConf;
 
 class Config
 {
-
     /**
      *
      * @var array
@@ -42,7 +41,7 @@ class Config
 
     /**
      * Get entire configurations in application and modules
-     * 
+     *
      * @return array
      */
     public function getConfig()
@@ -85,5 +84,4 @@ class Config
     {
         return $this;
     }
-
 }

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Mvc\Module;
+namespace Phalex\Mvc\Module;
 
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
@@ -17,18 +17,14 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
  */
 abstract class AbstractModule implements ModuleDefinitionInterface
 {
-
     abstract public function getConfig();
     abstract public function getAutoloaderConfig();
 
     final public function registerAutoloaders()
     {
-        
     }
 
     public function registerServices($dependencyInjector)
     {
-        
     }
-
 }

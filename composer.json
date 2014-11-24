@@ -1,13 +1,14 @@
 {
-    "name" : "tmquang6805/phalcon-ext",
-    "description" : "Phalcon extension library for develop multi modules easier",
+    "name" : "tmquang6805/phalex",
+    "description" : "Library build on top PhalconPHP Framework",
     "version" : "0.5.0",
     "type" : "library",
     "keywords" : [
         "phalcon",
-        "module"
+        "library",
+		"extension"
     ],
-    "license" : "BSD-3-Clause",
+    "license" : "MIT",
     "authors" : [
         {
             "name" : "Tran Minh Quang",
@@ -27,12 +28,12 @@
     },
     "autoload" : {
         "psr-4" : {
-            "Phalcon\\Extension\\" : "library/Phalcon/Extension/"
+            "Phalex\\" : "library/Phalex/"
         }
     },
     "autoload-dev" : {
         "psr-4" : {
-            "Phalcon\\ExtensionTest\\" : "tests/Phalcon/ExtensionTest/"
+            "PhalexTest\\" : "tests/PhalexTest/"
         }
     }
 }

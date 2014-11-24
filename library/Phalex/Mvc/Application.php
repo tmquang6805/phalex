@@ -7,18 +7,17 @@
  * Time: 00:44
  */
 
-namespace Phalcon\Extension\Mvc;
+namespace Phalex\Mvc;
 
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\DI\FactoryDefault;
-use Phalcon\Extension\Mvc\Module;
-use Phalcon\Extension\Mvc\Module\Cache as CacheModule;
-use Phalcon\Extension\Config\Config as ConfigHandler;
-use Phalcon\Extension\Config\Cache as CacheConf;
+use Phalex\Mvc\Module;
+use Phalex\Mvc\Module\Cache as CacheModule;
+use Phalex\Config\Config as ConfigHandler;
+use Phalex\Config\Cache as CacheConf;
 
 class Application
 {
-
     /**
      * @todo Use later
      * @var EventsManager
@@ -73,9 +72,9 @@ class Application
     }
 
     /**
-     * 
+     *
      * @param array $config
-     * @return null|\Phalcon\Extension\Mvc\Module\Cache\CacheInterface
+     * @return null|\Phalex\Mvc\Module\Cache\CacheInterface
      */
     private function getCacheModule(array $config)
     {
@@ -83,9 +82,9 @@ class Application
     }
 
     /**
-     * 
+     *
      * @param array $config
-     * @return null|\Phalcon\Extension\Config\Cache\CacheInterface
+     * @return null|\Phalex\Config\Cache\CacheInterface
      */
     private function getCacheConfig(array $config)
     {
@@ -96,5 +95,4 @@ class Application
     {
         echo 'Run project';
     }
-
 }

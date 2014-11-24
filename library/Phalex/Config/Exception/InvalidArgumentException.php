@@ -6,22 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace Phalcon\Extension\Config\Cache;
+namespace Phalex\Config\Exception;
 
 /**
- * Description of File
+ * Description of InvalidArgumentException
  *
  * @author quangtm
  */
-class File implements CacheInterface
+class InvalidArgumentException extends \InvalidArgumentException
 {
-    public function __construct($options)
-    {
-    }
-
-    public function getConfig()
-    {
-        return false;
-    }
-
+    //put your code here
 }
