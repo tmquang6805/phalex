@@ -46,8 +46,8 @@ class Application
         if (!$cacheConfig) {
             $modulesConfig = $moduleHandler->getModulesConfig();
         }
-//        return (new ConfigHandler($modulesConfig, $config['config_glob_paths'], $cacheConfig))
-//                        ->getConfig();
+        return (new ConfigHandler($modulesConfig, $config['config_glob_paths'], $cacheConfig))
+                        ->getConfig();
     }
 
     /**
