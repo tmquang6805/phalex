@@ -20,7 +20,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ConfigTest extends TestCase
 {
-
     private function getFiles($globPaths)
     {
         $files = [];
@@ -112,5 +111,4 @@ class ConfigTest extends TestCase
                 ->getConfig();
         $this->assertEquals($expected, $resultConfig);
     }
-
 }
