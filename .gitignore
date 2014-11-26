@@ -4,3 +4,5 @@
 /code-coverage/
 /module/
 /module/*
+/config/
+/config/*

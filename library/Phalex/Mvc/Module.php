@@ -12,6 +12,7 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Module
 {
+
     /**
      *
      * @var array
@@ -31,7 +32,8 @@ class Module
             $this->modules = $cache->getRegisteredModules();
             $this->loadCachedModules();
             $this->cache   = $cache;
-        } else {
+        }
+        else {
             $this->loadModules($modules, array_unique($paths));
         }
     }
@@ -100,6 +102,15 @@ class Module
         return $this->modules;
     }
 
+    protected function filterModuleConfigViewPath($view, $moduleName)
+    {
+        $realPathView = realpath($view);
+        if (!$realPathView) {
+            throw new Exception\RuntimeException(sprintf('The view path for module "%s" is invalid', $moduleName));
+        }
+        return $realPathView;
+    }
+
     /**
      * Filter module's configurations
      * @param array $moduleConfig
@@ -114,11 +125,9 @@ class Module
         }
 
         foreach ($moduleConfig as $config) {
-            $realPathView = realpath($config['view']);
-            if (!$realPathView) {
-                throw new Exception\RuntimeException(sprintf('The view path for module "%s" is invalid', $moduleName));
+            if (isset($config['view'])) {
+                $moduleConfig[$moduleName]['view'] = $this->filterModuleConfigViewPath($config['view'], $moduleName);
             }
-            $moduleConfig[$moduleName]['view'] = $realPathView;
         }
 
         return $moduleConfig;
@@ -185,4 +194,5 @@ class Module
         $result = $this->getRealPathAutoloadConfig($result);
         return $result;
     }
+
 }
