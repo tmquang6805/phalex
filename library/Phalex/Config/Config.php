@@ -2,11 +2,11 @@
 
 namespace Phalex\Config;
 
-use Phalex\Mvc\Module\AbstractModule;
-use Phalcon\Config as BaseConf;
+use Zend\Stdlib\ArrayUtils;
 
 class Config
 {
+
     /**
      *
      * @var array
@@ -17,7 +17,7 @@ class Config
      *
      * @var array
      */
-    protected $globPaths;
+    protected $files;
 
     /**
      *
@@ -28,14 +28,24 @@ class Config
     /**
      *
      * @param array $modulesConfig
-     * @param type $globPaths
+     * @param string|array $globPaths
      * @param \Phalex\Config\Cache\CacheInterface $cache
      */
     public function __construct(array $modulesConfig, $globPaths, Cache\CacheInterface $cache = null)
     {
         $this->modulesConfig = $modulesConfig;
-        $this->globPaths     = $globPaths;
         $this->cache         = $cache;
+
+        $this->files = [];
+        if (!is_array($globPaths)) {
+            $globPaths = [$globPaths];
+        }
+
+        foreach ($globPaths as $globPath) {
+            foreach (glob($globPath, GLOB_BRACE) as $file) {
+                array_push($this->files, $file);
+            }
+        }
     }
 
     /**
@@ -45,15 +55,16 @@ class Config
      */
     public function getConfig()
     {
-        //        if ($this->cache instanceof Cache\CacheInterface && ($this->configs = $this->cache->getConfig()) !== false) {
-//            return $this->configs;
-//        }
-//
-//        $this->getConfigModules()
-//                ->getConfigApp()
-//                ->merge()
-//                ->setConfigToCache();
+        if ($this->cache instanceof Cache\CacheInterface && !empty($configs = $this->cache->getConfig())) {
+            return $configs;
+        }
 
-        return $this->configs;
+        $configs = $this->modulesConfig;
+        foreach ($this->files as $file) {
+            $configs = ArrayUtils::merge($configs, require $file);
+        }
+
+        return $configs;
     }
+
 }

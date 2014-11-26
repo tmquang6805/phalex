@@ -15,6 +15,7 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
+
     public function testConstructRaiseExptionEmptyParameters()
     {
         $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
@@ -50,7 +51,9 @@ class ModuleTest extends TestCase
 
         $expectedModulesConfig = ArrayUtils::merge(require './module/Application/config/module.config.php', require './module/Backend/config/module.config.php');
         foreach ($expectedModulesConfig as $moduleName => $moduleConfig) {
-            $expectedModulesConfig[$moduleName]['view'] = realpath($moduleConfig['view']);
+            if (isset($expectedModulesConfig[$moduleName]['view'])) {
+                $expectedModulesConfig[$moduleName]['view'] = realpath($moduleConfig['view']);
+            }
         }
 
         $expectedModulesAutoload = ArrayUtils::merge(require './module/Application/config/autoload.config.php', require './module/Backend/config/autoload.config.php');
@@ -72,7 +75,7 @@ class ModuleTest extends TestCase
         $this->setExpectedException(RuntimeException::class, sprintf('The autoloader configuration for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesAutoloadConfig();
     }
-    
+
     public function testGetModulesConfigRaiseException()
     {
         $moduleNames = ['Application', 'Backend'];
@@ -80,4 +83,5 @@ class ModuleTest extends TestCase
         $this->setExpectedException(RuntimeException::class, sprintf('The view path for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesConfig();
     }
+
 }
