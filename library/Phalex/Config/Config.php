@@ -6,7 +6,6 @@ use Zend\Stdlib\ArrayUtils;
 
 class Config
 {
-
     /**
      *
      * @var array
@@ -66,5 +65,4 @@ class Config
 
         return $configs;
     }
-
 }

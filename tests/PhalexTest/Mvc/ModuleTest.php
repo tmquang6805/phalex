@@ -15,7 +15,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
-
     public function testConstructRaiseExptionEmptyParameters()
     {
         $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
@@ -83,5 +82,4 @@ class ModuleTest extends TestCase
         $this->setExpectedException(RuntimeException::class, sprintf('The view path for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesConfig();
     }
-
 }
