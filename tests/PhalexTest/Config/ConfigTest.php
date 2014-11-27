@@ -10,7 +10,6 @@ namespace PhalexTest\Config;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Config\Config;
-use Phalex\Config\Cache\CacheInterface;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -20,95 +19,18 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ConfigTest extends TestCase
 {
-    private function getFiles($globPaths)
+    public function testGetConfig()
     {
-        $files = [];
-        if (!is_array($globPaths)) {
-            $globPaths = [$globPaths];
-        }
-
-        foreach ($globPaths as $globPath) {
-            foreach (glob($globPath, GLOB_BRACE) as $file) {
-                array_push($files, $file);
-            }
-        }
-        return $files;
-    }
-
-    public function supplyTestGetConfigBasic()
-    {
-        $modulesConfig = [];
-        $glob          = './config/{,*.}{global,local}.php';
-        $files         = $this->getFiles($glob);
-        $result        = $modulesConfig;
-        foreach ($files as $file) {
-            $result = ArrayUtils::merge($result, require $file);
-        }
-        return [$modulesConfig, $glob, $result];
-    }
-
-    public function supplyTestConfigArrayGlobPaths()
-    {
-        $modulesConfig = [];
+        $expected      = require './tests/config/config.result.php';
+        $modulesConfig = ArrayUtils::merge(require './tests/module/Application/config/module.config.php', require './tests/module/Backend/config/module.config.php');
         $globPaths     = [
-            './config/{,*.}{global}.php',
-            './config/local.php'
+            './tests/config/{,*.}{global}.php',
+            './tests/config/local.php'
         ];
 
-        $files  = $this->getFiles($globPaths);
-        $result = $modulesConfig;
-        foreach ($files as $file) {
-            $result = ArrayUtils::merge($result, require $file);
-        }
-
-        return [$modulesConfig, $globPaths, $result];
-    }
-
-    public function supplyTestConfig()
-    {
-        $modulesConfig = ArrayUtils::merge(require './module/Application/config/module.config.php', require './module/Backend/config/module.config.php');
-        $globPaths     = [
-            './config/{,*.}{global}.php',
-            './config/local.php'
-        ];
-
-        $files  = $this->getFiles($globPaths);
-        $result = $modulesConfig;
-        foreach ($files as $file) {
-            $result = ArrayUtils::merge($result, require $file);
-        }
-
-        return [$modulesConfig, $globPaths, $result];
-    }
-
-    public function supplyTestGetConfig()
-    {
-        $basic   = $this->supplyTestGetConfigBasic();
-        $basic[] = null;
-
-        $arrGlob   = $this->supplyTestConfigArrayGlobPaths();
-        $arrGlob[] = null;
-
-        $arrFull   = $this->supplyTestConfig();
-        $arrFull[] = null;
-        return[
-            $basic,
-            $arrGlob,
-            $arrFull,
-        ];
-    }
-
-    /**
-     * @dataProvider supplyTestGetConfig
-     * @param array $modulesConfig
-     * @param array|string $globPath
-     * @param array $expected
-     * @param CacheInterface $cacheInstance
-     */
-    public function testGetConfig(array $modulesConfig, $globPath, $expected, CacheInterface $cacheInstance = null)
-    {
-        $resultConfig = (new Config($modulesConfig, $globPath, $cacheInstance))
+        $resultConfig = (new Config($modulesConfig, $globPaths))
                 ->getConfig();
+        $this->assertInternalType('array', $resultConfig);
         $this->assertEquals($expected, $resultConfig);
     }
 }
