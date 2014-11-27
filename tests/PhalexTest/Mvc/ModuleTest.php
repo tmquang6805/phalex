@@ -32,7 +32,7 @@ class ModuleTest extends TestCase
     {
         $moduleNames = ['Application', 'Backend'];
 
-        $module = new Module($moduleNames, ['./module']);
+        $module = new Module($moduleNames, ['./tests/module']);
         foreach ($moduleNames as $moduleName) {
             $this->assertTrue(class_exists("$moduleName\\Module"));
         }
@@ -40,22 +40,22 @@ class ModuleTest extends TestCase
         $expectedRegisteredModules = [
             'Application' => [
                 'className' => 'Application\\Module',
-                'path'      => './module/Application/Module.php'
+                'path'      => './tests/module/Application/Module.php'
             ],
             'Backend'     => [
                 'className' => 'Backend\\Module',
-                'path'      => './module/Backend/Module.php'
+                'path'      => './tests/module/Backend/Module.php'
             ],
         ];
 
-        $expectedModulesConfig = ArrayUtils::merge(require './module/Application/config/module.config.php', require './module/Backend/config/module.config.php');
+        $expectedModulesConfig = ArrayUtils::merge(require './tests/module/Application/config/module.config.php', require './tests/module/Backend/config/module.config.php');
         foreach ($expectedModulesConfig as $moduleName => $moduleConfig) {
             if (isset($expectedModulesConfig[$moduleName]['view'])) {
                 $expectedModulesConfig[$moduleName]['view'] = realpath($moduleConfig['view']);
             }
         }
 
-        $expectedModulesAutoload = ArrayUtils::merge(require './module/Application/config/autoload.config.php', require './module/Backend/config/autoload.config.php');
+        $expectedModulesAutoload = ArrayUtils::merge(require './tests/module/Application/config/autoload.config.php', require './tests/module/Backend/config/autoload.config.php');
         foreach ($expectedModulesAutoload as $moduleName => $configAutoload) {
             foreach ($configAutoload as $key => $value) {
                 $expectedModulesAutoload[$moduleName][$key] = realpath($value);
@@ -70,7 +70,7 @@ class ModuleTest extends TestCase
     public function testGetModulesAutoloadConfigRaiseException()
     {
         $moduleNames = ['Application', 'Backend'];
-        $moduleMock  = new ModuleMock($moduleNames, ['./module']);
+        $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
         $this->setExpectedException(RuntimeException::class, sprintf('The autoloader configuration for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesAutoloadConfig();
     }
@@ -78,7 +78,7 @@ class ModuleTest extends TestCase
     public function testGetModulesConfigRaiseException()
     {
         $moduleNames = ['Application', 'Backend'];
-        $moduleMock  = new ModuleMock($moduleNames, ['./module']);
+        $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
         $this->setExpectedException(RuntimeException::class, sprintf('The view path for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesConfig();
     }

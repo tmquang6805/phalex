@@ -60,9 +60,47 @@ class Config
 
         $configs = $this->modulesConfig;
         foreach ($this->files as $file) {
+            $config = require $file;
+            if (!is_array($config)) {
+                throw new Exception\RuntimeException(sprintf('The config in "%s" file must be array data type', $file));
+            }
             $configs = ArrayUtils::merge($configs, require $file);
         }
 
+        return $this->cleanUp($configs);
+    }
+
+    /**
+     * Get real path for view path configs
+     * @param array $configViewPaths
+     * @return array
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
+     */
+    protected function filterViewPath($configViewPaths)
+    {
+        if (!ArrayUtils::isHashTable($configViewPaths)) {
+            throw new Exception\InvalidArgumentException('Config view path is not valid');
+        }
+
+        foreach ($configViewPaths as $namespace => $viewPath) {
+            $viewPath = realpath($viewPath);
+            if (!$viewPath) {
+                throw new Exception\RuntimeException(sprintf('Config view path for "%s" module is invalid', $namespace));
+            }
+            $configViewPaths[$namespace] = $viewPath;
+        }
+        return $configViewPaths;
+    }
+
+    /**
+     * Clean up entire application config
+     * @param array $configs
+     * @return array
+     */
+    protected function cleanUp(array $configs)
+    {
+        $configs['view'] = !isset($configs['view']) ? [] : $this->filterViewPath($configs['view']);
         return $configs;
     }
 }
