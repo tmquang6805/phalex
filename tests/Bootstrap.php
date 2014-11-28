@@ -1,5 +1,5 @@
 <?php
 
-chdir(__DIR__);
+chdir(dirname(__DIR__));
 
 include './vendor/autoload.php';
