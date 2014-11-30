@@ -20,6 +20,7 @@ use Phalex\Router\BeforeMatchInterface;
  */
 class DiManager
 {
+
     /**
      *
      * @var Di
@@ -79,11 +80,25 @@ class DiManager
         $route = $router->add($info['route'], $info['definitions']);
         $route->setName($name);
 
-        $this->setConvertions($route, $info)
-                ->setMatchCallback($route, $info)
-                ->setHostName($route, $info)
-                ->setMethods($route, $info);
+        $route = $this->setConvertions($route, $info);
+        $route = $this->setMatchCallback($route, $info);
+        $route = $this->setHostName($route, $info);
+        $route = $this->setMethods($route, $info);
         return $this;
+    }
+
+    /**
+     * Set DI base on class name
+     * @param type $className
+     * @throws Exception\RuntimeException
+     */
+    private function setDiByClassName($className)
+    {
+        if (!class_exists($className)) {
+            throw new Exception\RuntimeException(sprintf('Class "%s" is not found', $className));
+        }
+
+        $this->diFactory->set($className, new $className());
     }
 
     /**
@@ -94,32 +109,24 @@ class DiManager
      * @throws Exception\RuntimeException
      * @return \Phalex\Di\DiManager
      */
-    private function setConvertions(Route &$route, array $info)
+    private function setConvertions(Route $route, array $info)
     {
         if (!isset($info['convertions'])) {
-            return $this;
+            return $route;
         }
 
         $convertions = $info['convertions'];
         foreach ($convertions as $paramName => $className) {
-            if ($this->diFactory->has($className)) {
-                $convert = $this->diFactory->get($className);
-                $route->convert($paramName, [$convert, 'convert']);
-                continue;
+            if (!$this->diFactory->has($className)) {
+                $this->setDiByClassName($className);
             }
-
-            if (!class_exists($className)) {
-                throw new Exception\RuntimeException(sprintf('Class "%s" is not existed', $className));
-            }
-
-            $convert = new $className;
+            $convert = $this->diFactory->get($className);
             if (!$convert instanceof ConvertingInterface) {
                 throw new Exception\RuntimeException(sprintf('Class "%s" is not implemented by "%s" interface', $className, ConvertingInterface::class));
             }
             $route->convert($paramName, [$convert, 'convert']);
-            $this->diFactory->set($className, $convert);
         }
-        return $this;
+        return $route;
     }
 
     /**
@@ -130,30 +137,23 @@ class DiManager
      * @return \Phalex\Di\DiManager
      * @throws Exception\RuntimeException
      */
-    private function setMatchCallback(Route &$route, array $info)
+    private function setMatchCallback(Route $route, array $info)
     {
         if (!isset($info['before_match'])) {
-            return $this;
+            return $route;
         }
 
         $className = $info['before_match'];
-        if ($this->diFactory->has($className)) {
-            $matchCallback = $this->diFactory->get($className);
-            $route->beforeMatch([$matchCallback, 'beforeMatch']);
-            return $this;
+        if (!$this->diFactory->has($className)) {
+            $this->setDiByClassName($className);
         }
 
-        if (!class_exists($className)) {
-            throw new Exception\RuntimeException(sprintf('Class "%s" is not existed', $className));
-        }
-
-        $matchCallback = new $className;
+        $matchCallback = $this->diFactory->get($className);
         if (!$matchCallback instanceof BeforeMatchInterface) {
             throw new Exception\RuntimeException(sprintf('Class "%s" is not implemented by "%s" interface', $className, BeforeMatchInterface::class));
         }
         $route->beforeMatch([$matchCallback, 'beforeMatch']);
-        $this->diFactory->set($className, $matchCallback);
-        return $this;
+        return $route;
     }
 
     /**
@@ -163,14 +163,14 @@ class DiManager
      * @param array $info
      * @return \Phalex\Di\DiManager
      */
-    private function setHostName(Route &$route, array $info)
+    private function setHostName(Route $route, array $info)
     {
         if (!isset($info['host_name'])) {
-            return $this;
+            return $route;
         }
 
         $route->setHostname($info['host_name']);
-        return $this;
+        return $route;
     }
 
     /**
@@ -180,10 +180,10 @@ class DiManager
      * @param array $info
      * @return \Phalex\Di\DiManager
      */
-    private function setMethods(Route &$route, array $info)
+    private function setMethods(Route $route, array $info)
     {
         if (!isset($info['methods'])) {
-            return $this;
+            return $route;
         }
 
         $methods = $info['methods'];
@@ -191,7 +191,8 @@ class DiManager
             $methods = [$methods];
         }
 
-        array_walk($methods, function (&$method) {
+        array_walk($methods, function (&$method)
+        {
             $method = strtoupper($method);
         });
 
@@ -202,6 +203,7 @@ class DiManager
 
         $route->via($methods);
 
-        return $this;
+        return $route;
     }
+
 }
