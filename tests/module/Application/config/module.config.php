@@ -9,7 +9,7 @@ return [
     'router' => [
         'home' => [
             'route'   => '/',
-            'options' => [
+            'definitions' => [
                 'module'     => __NAMESPACE__,
                 'namespace'  => namespace\Controller::class,
                 'controller' => 'index',
@@ -18,7 +18,7 @@ return [
         ],
         'news' => [
             'route'       => '/news/([a-z0-9-]+)-([1-9][0-9]*)\.html',
-            'options'     => [
+            'definitions'     => [
                 'module'     => __NAMESPACE__,
                 'namespace'  => namespace\Controller::class,
                 'controller' => 'article',

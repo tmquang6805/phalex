@@ -6,18 +6,18 @@ $cwd = getcwd();
 
 return [
     'router' => [
-        'home'    => [
-            'route'   => '/',
-            'options' => [
+        'home'                 => [
+            'route'       => '/',
+            'definitions' => [
                 'module'     => Application::class,
                 'namespace'  => Application\Controller::class,
                 'controller' => 'index',
                 'action'     => 'index'
             ],
         ],
-        'news'    => [
+        'news'                 => [
             'route'       => '/news/([a-z0-9-]+)-([1-9][0-9]*)\.html',
-            'options'     => [
+            'definitions' => [
                 'module'     => Application::class,
                 'namespace'  => Application\Controller::class,
                 'controller' => 'article',
@@ -29,19 +29,19 @@ return [
                 'id' => Application\Router\ConvertId::class,
             ],
         ],
-        'be_home' => [
-            'route'     => '/',
-            'options'   => [
+        'be_home'              => [
+            'route'       => '/',
+            'definitions' => [
                 'module'     => Backend::class,
                 'namespace'  => Backend\Controller::class,
                 'controller' => 'index',
                 'action'     => 'index'
             ],
-            'host_name' => 'api.test-example.com',
+            'host_name'   => 'admin.test-example.com',
         ],
-        'be_news' => [
+        'be_news'              => [
             'route'        => '/news/:action/([a-z0-9-]+)-([1-9][0-9]*)\.html',
-            'options'      => [
+            'definitions'  => [
                 'module'     => Backend::class,
                 'namespace'  => Backend\Controller::class,
                 'controller' => 'article',
@@ -54,6 +54,29 @@ return [
             ],
             'before_match' => Backend\Router\Callback::class,
             'host_name'    => 'api.test-example.com',
+        ],
+        'api_add_article'      => [
+            'route'       => '/article',
+            'definitions' => [
+                'module'     => Application::class,
+                'namespace'  => Application\Controller::class,
+                'controller' => 'api-article',
+                'action'     => 'add'
+            ],
+            'methods'     => ['post'],
+            'host_name'   => 'api.test-example.com',
+        ],
+        'api_get_edit_article' => [
+            'route'       => '/article/([1-9][0-9]*)',
+            'definitions' => [
+                'module'     => Application::class,
+                'namespace'  => Application\Controller::class,
+                'controller' => 'api-article',
+                'action'     => 'get-edit',
+                'id'         => 1,
+            ],
+            'methods'     => ['get', 'put'],
+            'host_name'   => 'api.test-example.com',
         ],
     ],
     'view'   => [

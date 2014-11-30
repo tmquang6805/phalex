@@ -10,11 +10,11 @@
 namespace Phalex\Mvc;
 
 use Phalcon\Events\Manager as EventsManager;
-use Phalcon\DI\FactoryDefault;
 use Phalex\Mvc\Module;
 use Phalex\Mvc\Module\Cache as CacheModule;
 use Phalex\Config\Config as ConfigHandler;
 use Phalex\Config\Cache as CacheConf;
+use Phalex\Di;
 
 class Application
 {
@@ -24,6 +24,12 @@ class Application
      */
     protected $eventsManager;
 
+    /**
+     *
+     * @var Di\DiManager
+     */
+    protected $diManager;
+
     public function __construct(array $config)
     {
         $cacheModule       = !isset($config['cache_module']) ? null : $this->getCacheModule($config['cache_module']);
@@ -31,6 +37,7 @@ class Application
         $registeredModules = $moduleHandler->getRegisteredModules();
         $auloadModulesConf = $moduleHandler->getModulesAutoloadConfig();
         $entireAppConf     = $this->getAppConfig($moduleHandler, $config);
+        $this->diManager   = new Di\DiManager(new Di\Di($entireAppConf));
     }
 
     /**
