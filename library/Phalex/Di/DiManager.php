@@ -20,7 +20,6 @@ use Phalex\Router\BeforeMatchInterface;
  */
 class DiManager
 {
-
     /**
      *
      * @var Di
@@ -191,8 +190,7 @@ class DiManager
             $methods = [$methods];
         }
 
-        array_walk($methods, function (&$method)
-        {
+        array_walk($methods, function (&$method) {
             $method = strtoupper($method);
         });
 
@@ -205,5 +203,4 @@ class DiManager
 
         return $route;
     }
-
 }

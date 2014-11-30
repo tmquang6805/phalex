@@ -23,7 +23,6 @@ use Phalcon\Mvc\Router\Route;
  */
 class DiManagerTest extends TestCase
 {
-
     public function testInitRouterDiRaiseExeptionRouterConfig()
     {
         $this->setExpectedException(RuntimeException::class, 'Cannot init DI for router. Cannot find router configuration');
@@ -160,5 +159,4 @@ class DiManagerTest extends TestCase
         $setConvertionsMethod->setAccessible(true);
         $setConvertionsMethod->invokeArgs($diManager, [$mockRoute, $info]);
     }
-
 }

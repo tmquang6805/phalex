@@ -19,6 +19,5 @@ class ConvertId implements ConvertingInterface
 {
     public function convert($value)
     {
-        
     }
 }
