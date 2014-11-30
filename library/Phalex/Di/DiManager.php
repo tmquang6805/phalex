@@ -195,8 +195,9 @@ class DiManager
             $method = strtoupper($method);
         });
 
-        if (!count(array_diff($methods, ['POST', 'PUT', 'PATCH', 'GET', 'DELETE', 'OPTIONS', 'HEAD']))) {
-            throw new Exception\InvalidArgumentException(sprintf('Invalid methods: "%s"', implode(' - ', $methods)));
+        $diff = array_diff($methods, ['POST', 'PUT', 'PATCH', 'GET', 'DELETE', 'OPTIONS', 'HEAD']);
+        if (!count($diff)) {
+            throw new Exception\InvalidArgumentException(sprintf('Invalid methods: "%s"', implode(' - ', $diff)));
         }
 
         $route->via($methods);
