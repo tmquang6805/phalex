@@ -1,7 +1,6 @@
 {
     "name" : "tmquang6805/phalex",
     "description" : "Library build on top PhalconPHP Framework",
-    "version" : "0.5.0",
     "type" : "library",
     "keywords" : [
         "phalcon",

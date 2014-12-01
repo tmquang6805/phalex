@@ -8,7 +8,7 @@
 
 namespace Application\Router;
 
-use Phalex\Router\ConvertingInterface;
+use Phalex\Mvc\Router\ConvertingInterface;
 
 /**
  * Description of ConvertId

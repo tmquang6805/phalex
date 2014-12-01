@@ -6,13 +6,13 @@
  * and open the template in the editor.
  */
 
-namespace Phalex\Router;
+namespace Phalex\Mvc\Router;
 
 /**
  *
  * @author quangtm
  */
-interface ConvertingInterface
+interface BeforeMatchInterface
 {
-    public function convert($value);
+    public function beforeMatch($uri, $route);
 }
