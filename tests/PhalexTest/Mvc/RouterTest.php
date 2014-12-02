@@ -137,29 +137,138 @@ class RouterTest extends TestCase
         unset($name, $route);
 
         $paths = [
-            '/'                 => [
+            '/'                  => [
+                'route_name' => 'home',
                 'controller' => 'index',
                 'action'     => 'index',
             ],
-            '/index'            => [
+            '/index'             => [
+                'route_name' => 'controller',
                 'controller' => 'index',
                 'action'     => 'index',
             ],
-            '/application/test' => [
+            '/application/test'  => [
+                'route_name' => 'controller/action',
                 'controller' => 'application',
                 'action'     => 'test',
             ],
             '/application/test/' => [
+                'route_name' => 'controller/action',
                 'controller' => 'application',
                 'action'     => 'test',
             ],
         ];
-        
+
         foreach ($paths as $path => $opt) {
             $router->handle($path);
             $this->assertTrue($router->wasMatched());
             $this->assertEquals($opt['controller'], $router->getControllerName());
             $this->assertEquals($opt['action'], $router->getActionName());
+            $this->assertEquals($opt['route_name'], $router->getMatchedRoute()->getName());
         }
+    }
+
+    public function testAddRouteHttpMethods()
+    {
+        $di = new \Phalcon\DI();
+        $di->set('request', function () {
+            return new \Phalcon\Http\Request();
+        });
+        
+        Route::reset();
+        $router = new Router();
+        $router->setDI($di);
+        $routes = [
+            'home' => [
+                'route'       => '/',
+                'definitions' => [
+                    'controller' => 'index',
+                    'action'     => 'index',
+                    'module'     => 'Application',
+                    'namespace'  => 'Application\\Controller'
+                ],
+                'methods'     => ['get', 'put']
+            ],
+//            'controller'        => [
+//                'route'       => '/:controller',
+//                'definitions' => [
+//                    'controller' => 1,
+//                    'action'     => 'index',
+//                    'module'     => 'Application',
+//                    'namespace'  => 'Application\\Controller'
+//                ],
+//            ],
+//            'controller/action' => [
+//                'route'       => '/:controller/:action',
+//                'definitions' => [
+//                    'controller' => 1,
+//                    'action'     => 2,
+//                    'module'     => 'Application',
+//                    'namespace'  => 'Application\\Controller'
+//                ],
+//            ]
+        ];
+
+        foreach ($routes as $name => $route) {
+            $router->addRoute($name, $route);
+        }
+
+        $paths = [
+            '/' => [
+                [
+                    'method'  => 'GET',
+                    'matched' => true,
+                ],
+                [
+                    'method'  => 'POST',
+                    'matched' => false,
+                ],
+                [
+                    'method'  => 'PUT',
+                    'matched' => true,
+                ],
+                [
+                    'method'  => 'PATCH',
+                    'matched' => false,
+                ],
+                [
+                    'method'  => 'OPTIONS',
+                    'matched' => false,
+                ],
+                [
+                    'method'  => 'DELETE',
+                    'matched' => false,
+                ],
+            ],
+//            '/index'             => [
+//                'route_name' => 'controller',
+//                'controller' => 'index',
+//                'action'     => 'index',
+//            ],
+//            '/application/test'  => [
+//                'route_name' => 'controller/action',
+//                'controller' => 'application',
+//                'action'     => 'test',
+//            ],
+//            '/application/test/' => [
+//                'route_name' => 'controller/action',
+//                'controller' => 'application',
+//                'action'     => 'test',
+//            ],
+        ];
+
+        foreach ($paths as $path => $opts) {
+            foreach ($opts as $value) {
+                $_SERVER['REQUEST_METHOD'] = $value['method'];
+                $router->handle($path);
+                $this->assertEquals($value['matched'], $router->wasMatched());
+            }
+        }
+
+//        foreach ($paths as $path => $opt) {
+//            $this->assertEquals($opt['controller'], $router->getControllerName());
+//            $this->assertEquals($opt['action'], $router->getActionName());
+//            $this->assertEquals($opt['route_name'], $router->getMatchedRoute()->getName());
+//        }
     }
 }

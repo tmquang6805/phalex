@@ -9,6 +9,7 @@
 namespace Phalex\Mvc;
 
 use Phalcon\Mvc\Router as PhalconRouter;
+use Phalcon\Mvc\Router\Route;
 
 /**
  * Description of Router
@@ -25,6 +26,14 @@ class Router extends PhalconRouter
         $this->setUriSource(PhalconRouter::URI_SOURCE_SERVER_REQUEST_URI);
         $this->setDefaultAction('index');
         $this->setDefaultController('index');
+    }
+
+    private function setHttpMethods(Route $route, array $httpMethods)
+    {
+        foreach ($httpMethods as $idx => $method) {
+            $httpMethods[$idx] = strtoupper($method);
+        }
+        $route->via($httpMethods);
     }
 
     public function addRoute($name, array $routeInfo)
@@ -53,11 +62,9 @@ class Router extends PhalconRouter
              * @todo Handle setting match host name
              */
         }
-        
+
         if (isset($routeInfo['methods'])) {
-            /**
-             * @todo Handle setting match methods
-             */
+            $this->setHttpMethods($route, $routeInfo['methods']);
         }
     }
 }
