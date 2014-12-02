@@ -23,6 +23,8 @@ class Router extends PhalconRouter
         $this->clear();
         $this->removeExtraSlashes(true);
         $this->setUriSource(PhalconRouter::URI_SOURCE_SERVER_REQUEST_URI);
+        $this->setDefaultAction('index');
+        $this->setDefaultController('index');
     }
 
     public function addRoute($name, array $routeInfo)
