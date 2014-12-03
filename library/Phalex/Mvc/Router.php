@@ -47,9 +47,6 @@ class Router extends PhalconRouter
         $route->setName($name);
 
         if (isset($routeInfo['convertions'])) {
-            /**
-             * @todo Handle setting convertions
-             */
         }
 
         if (isset($routeInfo['before_match'])) {
@@ -59,9 +56,7 @@ class Router extends PhalconRouter
         }
 
         if (isset($routeInfo['host_name'])) {
-            /**
-             * @todo Handle setting match host name
-             */
+            $route->setHostname($routeInfo['host_name']);
         }
 
         if (isset($routeInfo['methods'])) {
