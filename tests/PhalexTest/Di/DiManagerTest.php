@@ -26,10 +26,12 @@ use Phalcon\Mvc\Router;
  */
 class DiManagerTest extends TestCase
 {
+    /**
+     * @expectedException \Phalex\Di\Exception\RuntimeException
+     * @expectedExceptionMessage Cannot init DI for router. Cannot find router configuration
+     */
     public function testInitRouterDiRaiseExeptionRouterConfig()
     {
-        $this->setExpectedException(RuntimeException::class, 'Cannot init DI for router. Cannot find router configuration');
-
         $entireAppConfig = require './tests/config/config.result.php';
         unset($entireAppConfig['router']);
 

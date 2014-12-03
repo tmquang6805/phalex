@@ -11,7 +11,7 @@ return [
             'route'   => '/',
             'definitions' => [
                 'module'     => __NAMESPACE__,
-                'namespace'  => namespace\Controller::class,
+                'namespace'  => Controller::class,
                 'controller' => 'index',
                 'action'     => 'index'
             ],
@@ -20,14 +20,14 @@ return [
             'route'       => '/news/([a-z0-9-]+)-([1-9][0-9]*)\.html',
             'definitions'     => [
                 'module'     => __NAMESPACE__,
-                'namespace'  => namespace\Controller::class,
+                'namespace'  => Controller::class,
                 'controller' => 'article',
                 'action'     => 'detail',
                 'title'      => 1,
                 'id'         => 2
             ],
             'convertions' => [
-                'id' => namespace\Router\ConvertId::class,
+                'id' => Router\ConvertId::class,
             ],
         ],
     ],

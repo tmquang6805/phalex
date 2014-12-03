@@ -185,7 +185,8 @@ class Module
         foreach ($this->setModuleClasses() as $moduleName => $module) {
             $autoloadConfig = $module->getAutoloaderConfig();
             if (!ArrayUtils::isHashTable($autoloadConfig)) {
-                throw new Exception\RuntimeException(sprintf('The autoloader configuration for module "%s" is invalid', $moduleName));
+                $errMsg = sprintf('The autoloader configuration for module "%s" is invalid', $moduleName);
+                throw new Exception\RuntimeException($errMsg);
             }
             $result = ArrayUtils::merge($result, $autoloadConfig);
         }

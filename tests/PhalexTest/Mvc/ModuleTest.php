@@ -48,14 +48,18 @@ class ModuleTest extends TestCase
             ],
         ];
 
-        $expectedModulesConfig = ArrayUtils::merge(require './tests/module/Application/config/module.config.php', require './tests/module/Backend/config/module.config.php');
+        $configModuleApp = require './tests/module/Application/config/module.config.php';
+        $configModuleBe = require './tests/module/Backend/config/module.config.php';
+        $expectedModulesConfig = ArrayUtils::merge($configModuleApp, $configModuleBe);
         foreach ($expectedModulesConfig as $moduleName => $moduleConfig) {
             if (isset($expectedModulesConfig[$moduleName]['view'])) {
                 $expectedModulesConfig[$moduleName]['view'] = realpath($moduleConfig['view']);
             }
         }
 
-        $expectedModulesAutoload = ArrayUtils::merge(require './tests/module/Application/config/autoload.config.php', require './tests/module/Backend/config/autoload.config.php');
+        $autoloadModuleApp = require './tests/module/Application/config/autoload.config.php';
+        $autoloadModuleBe = require './tests/module/Backend/config/autoload.config.php';
+        $expectedModulesAutoload = ArrayUtils::merge($autoloadModuleApp, $autoloadModuleBe);
         foreach ($expectedModulesAutoload as $moduleName => $configAutoload) {
             foreach ($configAutoload as $key => $value) {
                 $expectedModulesAutoload[$moduleName][$key] = realpath($value);
@@ -67,19 +71,25 @@ class ModuleTest extends TestCase
         $this->assertEquals($expectedModulesAutoload, $module->getModulesAutoloadConfig());
     }
 
+    /**
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage The autoloader configuration for module "Application" is invalid
+     */
     public function testGetModulesAutoloadConfigRaiseException()
     {
         $moduleNames = ['Application', 'Backend'];
         $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
-        $this->setExpectedException(RuntimeException::class, sprintf('The autoloader configuration for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesAutoloadConfig();
     }
 
+    /**
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage The view path for module "Application" is invalid
+     */
     public function testGetModulesConfigRaiseException()
     {
         $moduleNames = ['Application', 'Backend'];
         $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
-        $this->setExpectedException(RuntimeException::class, sprintf('The view path for module "%s" is invalid', 'Application'));
         $moduleMock->getModulesConfig();
     }
 }

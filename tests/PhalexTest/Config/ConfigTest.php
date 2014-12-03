@@ -22,7 +22,9 @@ class ConfigTest extends TestCase
     public function testGetConfig()
     {
         $expected      = require './tests/config/config.result.php';
-        $modulesConfig = ArrayUtils::merge(require './tests/module/Application/config/module.config.php', require './tests/module/Backend/config/module.config.php');
+        $configApp     = require './tests/module/Application/config/module.config.php';
+        $configBe      = require './tests/module/Backend/config/module.config.php';
+        $modulesConfig = ArrayUtils::merge($configApp, $configBe);
         $globPaths     = [
             './tests/config/{,*.}{global}.php',
             './tests/config/local.php'

@@ -39,7 +39,8 @@ class Router extends PhalconRouter
     public function addRoute($name, array $routeInfo)
     {
         if (!isset($routeInfo['route']) || !isset($routeInfo['definitions'])) {
-            throw new Exception\InvalidArgumentException('Not found required configs for router. Maybe miss "route" or "definitions"');
+            $errMsg = 'Not found required configs for router. Maybe miss "route" or "definitions"';
+            throw new Exception\InvalidArgumentException($errMsg);
         }
 
         $route = $this->add($routeInfo['route'], $routeInfo['definitions']);

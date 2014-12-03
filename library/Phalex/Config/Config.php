@@ -86,7 +86,8 @@ class Config
         foreach ($configViewPaths as $namespace => $viewPath) {
             $viewPath = realpath($viewPath);
             if (!$viewPath) {
-                throw new Exception\RuntimeException(sprintf('Config view path for "%s" module is invalid', $namespace));
+                $errMsg = sprintf('Config view path for "%s" module is invalid', $namespace);
+                throw new Exception\RuntimeException($errMsg);
             }
             $configViewPaths[$namespace] = $viewPath;
         }

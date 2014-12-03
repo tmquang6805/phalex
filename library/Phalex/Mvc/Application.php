@@ -61,11 +61,10 @@ class Application
      * Get cache instance for config or module
      * @param array $config
      * @param string $namespace
-     * @param string $errMsg
      * @return null|object
      * @throws Exception\RuntimeException
      */
-    private function getCacheInstance(array $config, $namespace, $errMsg)
+    private function getCacheInstance(array $config, $namespace)
     {
         if (!isset($config['enable']) || !$config['enable']) {
             return null;
@@ -73,6 +72,7 @@ class Application
 
         $className = $namespace . '\\' . ucfirst(strtolower($config['adapter']));
         if (!class_exists($className)) {
+            $errMsg = sprintf('Adapter "%s" is not supported for caching', $config['adapter']);
             throw new Exception\RuntimeException($errMsg);
         }
         return new $className($config['options']);
@@ -85,7 +85,7 @@ class Application
      */
     private function getCacheModule(array $config)
     {
-        return $this->getCacheInstance($config, CacheModule::class, sprintf('Adapter "%s" is not supported for caching modules', $config['adapter']));
+        return $this->getCacheInstance($config, CacheModule::class);
     }
 
     /**
@@ -95,7 +95,7 @@ class Application
      */
     private function getCacheConfig(array $config)
     {
-        return $this->getCacheInstance($config, CacheConf::class, sprintf('Adapter "%s" is not supported for caching configuration', $config['adapter']));
+        return $this->getCacheInstance($config, CacheConf::class);
     }
 
     public function run()

@@ -10,7 +10,7 @@ return [
             'route'     => '/',
             'definitions'   => [
                 'module'     => __NAMESPACE__,
-                'namespace'  => namespace\Controller::class,
+                'namespace'  => Controller::class,
                 'controller' => 'index',
                 'action'     => 'index'
             ],
@@ -20,7 +20,7 @@ return [
             'route'        => '/news/:action/([a-z0-9-]+)-([1-9][0-9]*)\.html',
             'definitions'      => [
                 'module'     => __NAMESPACE__,
-                'namespace'  => namespace\Controller::class,
+                'namespace'  => Controller::class,
                 'controller' => 'article',
                 'action'     => 1,
                 'title'      => 2,
@@ -29,7 +29,7 @@ return [
             'convertions'  => [
                 'id' => Application\Router\ConvertId::class,
             ],
-            'before_match' => namespace\Router\Callback::class,
+            'before_match' => Router\Callback::class,
             'host_name'    => 'api.test-example.com',
         ],
     ],
