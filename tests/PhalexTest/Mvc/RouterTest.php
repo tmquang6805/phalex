@@ -213,64 +213,28 @@ class RouterTest extends TestCase
 
         $paths = [
             '/'      => [
-                [
-                    'method'  => 'GET',
-                    'matched' => true,
-                ],
-                [
-                    'method'  => 'POST',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'PUT',
-                    'matched' => true,
-                ],
-                [
-                    'method'  => 'PATCH',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'OPTIONS',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'DELETE',
-                    'matched' => false,
-                ],
+                'GET'     => true,
+                'POST'    => false,
+                'PUT'     => true,
+                'PATCH'   => false,
+                'OPTIONS' => false,
+                'DELETE'  => false,
             ],
             '/index' => [
-                [
-                    'method'  => 'GET',
-                    'matched' => true,
-                ],
-                [
-                    'method'  => 'POST',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'PUT',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'PATCH',
-                    'matched' => false,
-                ],
-                [
-                    'method'  => 'OPTIONS',
-                    'matched' => true,
-                ],
-                [
-                    'method'  => 'DELETE',
-                    'matched' => false,
-                ],
+                'GET'     => true,
+                'POST'    => false,
+                'PUT'     => false,
+                'PATCH'   => false,
+                'OPTIONS' => true,
+                'DELETE'  => false,
             ],
         ];
 
         foreach ($paths as $path => $opts) {
-            foreach ($opts as $value) {
-                $_SERVER['REQUEST_METHOD'] = $value['method'];
+            foreach ($opts as $httpMethod => $isMatched) {
+                $_SERVER['REQUEST_METHOD'] = $httpMethod;
                 $router->handle($path);
-                $this->assertEquals($value['matched'], $router->wasMatched());
+                $this->assertEquals($isMatched, $router->wasMatched());
             }
         }
     }
@@ -297,7 +261,7 @@ class RouterTest extends TestCase
                 'controller' => 'posts-example',
                 'action'     => 'edit-example'
             ],
-            'host_name' => 'sub.example.com'
+            'host_name'   => 'sub.example.com'
         ]);
         $router->addRoute('sub1-example/edit', [
             'route'       => '/edit',
@@ -305,7 +269,7 @@ class RouterTest extends TestCase
                 'controller' => 'posts-sub',
                 'action'     => 'edit-sub'
             ],
-            'host_name' => 'sub1.example.com'
+            'host_name'   => 'sub1.example.com'
         ]);
         $routes = array(
             array(
@@ -327,6 +291,54 @@ class RouterTest extends TestCase
             $this->assertTrue($router->wasMatched());
             $this->assertEquals($route['controller'], $router->getControllerName());
             $this->assertEquals($route['hostname'], $router->getMatchedRoute()->getHostname());
+        }
+    }
+
+    /**
+     * @group convert
+     */
+    public function testConvertions()
+    {
+        Route::reset();
+        $router = new Router();
+        $router->setDI($this->getDi());
+
+        $router->addRoute('edit-closure', [
+            'route'       => '/edit/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts',
+                'action'     => 'edit',
+                'id'         => 1
+            ],
+            'convertions' => [
+                'id' => function ($id) {
+                    return intval($id);
+                }
+            ],
+        ]);
+//        $router->addRoute('edit-classname', [
+//            'route'       => '/edit2/([1-9][0-9]*)',
+//            'definitions' => [
+//                'controller' => 'posts2',
+//                'action'     => 'edit2',
+//                'id'         => 1
+//            ],
+//            'convertions' => [
+//                'id' => [
+//                    'class_name' => \Application\Router\ConvertId::class,
+//                ]
+//            ],
+//        ]);
+        $routes = [
+            '/edit/100',
+//            '/edit2/100'
+        ];
+        foreach ($routes as $route) {
+            $router->handle($route);
+            $this->assertTrue($router->wasMatched());
+            $id = $router->getParams()['id'];
+            $this->assertInternalType('int', $id);
+            $this->assertTrue($id === 100);
         }
     }
 }

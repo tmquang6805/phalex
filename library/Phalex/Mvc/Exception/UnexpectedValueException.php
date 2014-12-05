@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace Phalex\Mvc\Router\Exception;
+namespace Phalex\Mvc\Exception;
 
 /**
- * Description of InvalidArgumentException
+ * Description of UnexpectedValueException
  *
  * @author quangtm
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class UnexpectedValueException extends \UnexpectedValueException
 {
     //put your code here
 }
