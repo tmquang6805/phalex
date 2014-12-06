@@ -6,16 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace Phalex\Mvc\Router;
-
-use Phalcon\Mvc\Router;
-use Phalcon\Mvc\Router\Route;
+namespace Application\Router;
 
 /**
+ * Description of BeforeMatchFail
  *
  * @author quangtm
  */
-interface BeforeMatchInterface
+class BeforeMatchFail
 {
-    public function beforeMatch($uri, Route $route, Router $router);
+    //put your code here
 }

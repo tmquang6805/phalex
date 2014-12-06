@@ -13,6 +13,10 @@ use Phalcon\Mvc\Router\Route;
 use Phalcon\DI as PhalconDi;
 use Phalcon\Http\Request as PhalconRequest;
 use PHPUnit_Framework_TestCase as TestCase;
+use Application\Router\BeforeMatchFail;
+use Phalex\Mvc\Router\BeforeMatchInterface;
+use Phalex\Mvc\Exception\RuntimeException;
+use Application\Router\BeforeMatchMock;
 
 /**
  * Description of RouterTest
@@ -365,14 +369,9 @@ class RouterTest extends TestCase
                 'id' => []
             ],
         ]);
-        $routes = [
-            '/edit2/100'
-        ];
-        foreach ($routes as $route) {
-            $router->handle($route);
-        }
+        $router->handle('/edit2/100');
     }
-    
+
     /**
      * @group convert
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
@@ -397,14 +396,9 @@ class RouterTest extends TestCase
                 ]
             ],
         ]);
-        $routes = [
-            '/edit2/100'
-        ];
-        foreach ($routes as $route) {
-            $router->handle($route);
-        }
+        $router->handle('/edit2/100');
     }
-    
+
     /**
      * @group convert
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
@@ -430,11 +424,73 @@ class RouterTest extends TestCase
                 ]
             ],
         ]);
-        $routes = [
-            '/edit2/100'
-        ];
-        foreach ($routes as $route) {
-            $router->handle($route);
-        }
+        $router->handle('/edit2/100');
+    }
+
+    /**
+     * @group before_match
+     */
+    public function testBeforeMatch()
+    {
+        require_once 'tests/module/Application/src/Router/BeforeMatchMock.php';
+        Route::reset();
+        $trace  = 0;
+        $router = new Router();
+
+        $router->addRoute('fail', [
+            'route'        => '/route-fail',
+            'definitions'  => [
+                'controller' => 'fail',
+                'index'      => 'fail'
+            ],
+            'before_match' => function () use (&$trace) {
+                $trace++;
+                return false;
+            },
+        ]);
+
+        $router->addRoute('success', [
+            'route'        => '/route-success',
+            'definitions'  => [
+                'controller' => 'success',
+                'index'      => 'success'
+            ],
+            'before_match' => [
+                'class_name' => BeforeMatchMock::class
+            ],
+        ]);
+        $router->handle();
+        $this->assertFalse($router->wasMatched());
+        $router->handle('/route-fail');
+        $this->assertFalse($router->wasMatched());
+        $this->assertEquals($trace, 1);
+        $router->handle('/route-success');
+        $this->assertTrue($router->wasMatched());
+    }
+    
+    /**
+     * @group before_match
+     */
+    public function testBeforeMatchRaiseInvalidClass()
+    {
+        require_once 'tests/module/Application/src/Router/BeforeMatchFail.php';
+        $excMsg = sprintf('"%s" must be implemented "%s"', BeforeMatchFail::class, BeforeMatchInterface::class);
+        $this->setExpectedException(RuntimeException::class, $excMsg);
+        Route::reset();
+        $router = new Router();
+        $router->setDI($this->getDi());
+
+        $router->addRoute('edit-classname', [
+            'route'       => '/edit2/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts2',
+                'action'     => 'edit2',
+                'id'         => 1
+            ],
+            'before_match' => [
+                'class_name' => BeforeMatchFail::class
+            ],
+        ]);
+        $router->handle('/edit2/100');
     }
 }
