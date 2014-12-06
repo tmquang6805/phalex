@@ -24,7 +24,6 @@ use Phalex\Mvc\Router\BeforeMatchInterface;
  */
 class Router extends PhalconRouter
 {
-
     public function __construct()
     {
         parent::__construct(false);
@@ -156,5 +155,4 @@ class Router extends PhalconRouter
             $this->setHttpMethods($route, $routeInfo['methods']);
         }
     }
-
 }
