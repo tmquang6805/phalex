@@ -299,6 +299,7 @@ class RouterTest extends TestCase
      */
     public function testConvertions()
     {
+        require_once 'tests/module/Application/src/Router/ConvertId.php';
         Route::reset();
         $router = new Router();
         $router->setDI($this->getDi());
@@ -316,22 +317,22 @@ class RouterTest extends TestCase
                 }
             ],
         ]);
-//        $router->addRoute('edit-classname', [
-//            'route'       => '/edit2/([1-9][0-9]*)',
-//            'definitions' => [
-//                'controller' => 'posts2',
-//                'action'     => 'edit2',
-//                'id'         => 1
-//            ],
-//            'convertions' => [
-//                'id' => [
-//                    'class_name' => \Application\Router\ConvertId::class,
-//                ]
-//            ],
-//        ]);
+        $router->addRoute('edit-classname', [
+            'route'       => '/edit2/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts2',
+                'action'     => 'edit2',
+                'id'         => 1
+            ],
+            'convertions' => [
+                'id' => [
+                    'class_name' => \Application\Router\ConvertId::class,
+                ]
+            ],
+        ]);
         $routes = [
             '/edit/100',
-//            '/edit2/100'
+            '/edit2/100'
         ];
         foreach ($routes as $route) {
             $router->handle($route);
@@ -339,6 +340,101 @@ class RouterTest extends TestCase
             $id = $router->getParams()['id'];
             $this->assertInternalType('int', $id);
             $this->assertTrue($id === 100);
+        }
+    }
+
+    /**
+     * @group convert
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage Config router convert miss "class_name"
+     */
+    public function testConvertionsRaiseMissConfig()
+    {
+        Route::reset();
+        $router = new Router();
+        $router->setDI($this->getDi());
+
+        $router->addRoute('edit-classname', [
+            'route'       => '/edit2/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts2',
+                'action'     => 'edit2',
+                'id'         => 1
+            ],
+            'convertions' => [
+                'id' => []
+            ],
+        ]);
+        $routes = [
+            '/edit2/100'
+        ];
+        foreach ($routes as $route) {
+            $router->handle($route);
+        }
+    }
+    
+    /**
+     * @group convert
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage "A\B\Convert" is not existed
+     */
+    public function testConvertionsRaiseClassNotExists()
+    {
+        Route::reset();
+        $router = new Router();
+        $router->setDI($this->getDi());
+
+        $router->addRoute('edit-classname', [
+            'route'       => '/edit2/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts2',
+                'action'     => 'edit2',
+                'id'         => 1
+            ],
+            'convertions' => [
+                'id' => [
+                    'class_name' => 'A\\B\\Convert'
+                ]
+            ],
+        ]);
+        $routes = [
+            '/edit2/100'
+        ];
+        foreach ($routes as $route) {
+            $router->handle($route);
+        }
+    }
+    
+    /**
+     * @group convert
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage "Application\Router\Temp" must be implemented "Phalex\Mvc\Router\ConvertingInterface"
+     */
+    public function testConvertionsRaiseInvalidClass()
+    {
+        require_once 'tests/module/Application/src/Router/Temp.php';
+        Route::reset();
+        $router = new Router();
+        $router->setDI($this->getDi());
+
+        $router->addRoute('edit-classname', [
+            'route'       => '/edit2/([1-9][0-9]*)',
+            'definitions' => [
+                'controller' => 'posts2',
+                'action'     => 'edit2',
+                'id'         => 1
+            ],
+            'convertions' => [
+                'id' => [
+                    'class_name' => \Application\Router\Temp::class
+                ]
+            ],
+        ]);
+        $routes = [
+            '/edit2/100'
+        ];
+        foreach ($routes as $route) {
+            $router->handle($route);
         }
     }
 }

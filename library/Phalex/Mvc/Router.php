@@ -10,7 +10,6 @@ namespace Phalex\Mvc;
 
 use Phalcon\Mvc\Router as PhalconRouter;
 use Phalcon\Mvc\Router\Route;
-use Phalcon\DiInterface;
 use Phalex\Mvc\Router\ConvertingInterface;
 
 /**
@@ -30,52 +29,37 @@ class Router extends PhalconRouter
         $this->setDefaultController('index');
     }
 
-    protected function getDiRouteConvert(DiInterface $di, $name, $configConvert)
+    protected function getRouteConvert($configConvert)
     {
-        if ($di->has($name)) {
-            return $di->get($name);
+        if (is_callable($configConvert)) {
+            return $configConvert;
+        }
+        if (!isset($configConvert['class_name'])) {
+            throw new Exception\RuntimeException('Config router convert miss "class_name"');
+        }
+        $className = $configConvert['class_name'];
+        if (!class_exists($className)) {
+            throw new Exception\RuntimeException(sprintf('"%s" is not existed', $className));
         }
 
-        $di->set($name, function () use ($configConvert) {
-            if (is_callable($configConvert)) {
-                return $configConvert;
-            }
-            if (!isset($configConvert['class_name'])) {
-                throw new Exception\RuntimeException('Config router convert miss "class_name"');
-            }
-            $className = $configConvert['class_name'];
-            if (!class_exists($className)) {
-                throw new Exception\RuntimeException(sprintf('"%s" is not existed', $className));
-            }
-            
-            /**
-             * @todo User can config parameter when create new object
-             * @todo User can config call method after creating object
-             */
-            $object = new $className;
-            if (!$object instanceof ConvertingInterface) {
-                $errMsg = sprintf('"%s" must be implemented "%s"', $className, ConvertingInterface::class);
-                throw new Exception\RuntimeException($errMsg);
-            }
-            return $object;
-        }, true);
-        
-        return $di->get($name);
+        /**
+         * @todo User can config parameter when create new object
+         * @todo User can config call method after creating object
+         */
+        $object = new $className;
+        if (!$object instanceof ConvertingInterface) {
+            $errMsg = sprintf('"%s" must be implemented "%s"', $className, ConvertingInterface::class);
+            throw new Exception\RuntimeException($errMsg);
+        }
+        return $object;
     }
 
     protected function setConvertions(Route $route, array $convertions)
     {
-        $di = $this->getDI();
-        if (!$di instanceof DiInterface) {
-            $msg = sprintf('DI must be implemented by "%s" when set convertion', DiInterface::class);
-            throw new Exception\UnexpectedValueException($msg);
-        }
-
-        foreach ($convertions as $name => $configConvert) {
-            $diName     = 'route-di-convertion:' . $name;
-            $convertObj = $this->getDiRouteConvert($di, $diName, $configConvert);
+        foreach ($convertions as $convertionName => $convertConfig) {
+            $convertObj = $this->getRouteConvert($convertConfig);
             $converter  = is_callable($convertObj) ? $convertObj : [$convertObj, 'convert'];
-            $route->convert($name, $converter);
+            $route->convert($convertionName, $converter);
         }
     }
 

@@ -8,17 +8,12 @@
 
 namespace Application\Router;
 
-use Phalex\Mvc\Router\ConvertingInterface;
-
 /**
- * Description of ConvertId
+ * Description of Temp
  *
  * @author quangtm
  */
-class ConvertId implements ConvertingInterface
+class Temp
 {
-    public function convert($value)
-    {
-        return intval($value);
-    }
+    //put your code here
 }
