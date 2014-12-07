@@ -15,6 +15,7 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
+
     public function testConstructRaiseExptionEmptyParameters()
     {
         $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
@@ -37,35 +38,9 @@ class ModuleTest extends TestCase
             $this->assertTrue(class_exists("$moduleName\\Module"));
         }
 
-        $expectedRegisteredModules = [
-            'Application' => [
-                'className' => 'Application\\Module',
-                'path'      => './tests/module/Application/Module.php'
-            ],
-            'Backend'     => [
-                'className' => 'Backend\\Module',
-                'path'      => './tests/module/Backend/Module.php'
-            ],
-        ];
-
-        $configModuleApp = require './tests/module/Application/config/module.config.php';
-        $configModuleBe = require './tests/module/Backend/config/module.config.php';
-        $expectedModulesConfig = ArrayUtils::merge($configModuleApp, $configModuleBe);
-        foreach ($expectedModulesConfig as $moduleName => $moduleConfig) {
-            if (isset($expectedModulesConfig[$moduleName]['view'])) {
-                $expectedModulesConfig[$moduleName]['view'] = realpath($moduleConfig['view']);
-            }
-        }
-
-        $autoloadModuleApp = require './tests/module/Application/config/autoload.config.php';
-        $autoloadModuleBe = require './tests/module/Backend/config/autoload.config.php';
-        $expectedModulesAutoload = ArrayUtils::merge($autoloadModuleApp, $autoloadModuleBe);
-        foreach ($expectedModulesAutoload as $moduleName => $configAutoload) {
-            foreach ($configAutoload as $key => $value) {
-                $expectedModulesAutoload[$moduleName][$key] = realpath($value);
-            }
-        }
-
+        $expectedRegisteredModules = require './tests/config/module_register.result.php';
+        $expectedModulesConfig     = require './tests/config/module_config.result.php';
+        $expectedModulesAutoload   = require './tests/config/autoload.result.php';
         $this->assertEquals($expectedRegisteredModules, $module->getRegisteredModules());
         $this->assertEquals($expectedModulesConfig, $module->getModulesConfig());
         $this->assertEquals($expectedModulesAutoload, $module->getModulesAutoloadConfig());
@@ -92,4 +67,5 @@ class ModuleTest extends TestCase
         $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
         $moduleMock->getModulesConfig();
     }
+
 }

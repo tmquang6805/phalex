@@ -24,8 +24,8 @@ class ModuleMock extends Module
         $appMock->shouldReceive('getAutoloaderConfig')->andReturn([1, 2, 3]);
 
         $appMock->shouldReceive('getConfig')->andReturn([
-            'Application' => [
-                'view' => './application/view'
+            'view' => [
+                'Application' => './application/view_fake'
             ],
         ]);
 

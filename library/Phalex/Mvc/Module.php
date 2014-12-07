@@ -12,6 +12,7 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Module
 {
+
     /**
      *
      * @var array
@@ -31,7 +32,8 @@ class Module
             $this->modules = $cache->getRegisteredModules();
             $this->loadCachedModules();
             $this->cache   = $cache;
-        } else {
+        }
+        else {
             $this->loadModules($modules, array_unique($paths));
         }
     }
@@ -122,10 +124,8 @@ class Module
             throw new Exception\RuntimeException(sprintf('The configuration for module "%s" is invalid', $moduleName));
         }
 
-        foreach ($moduleConfig as $config) {
-            if (isset($config['view'])) {
-                $moduleConfig[$moduleName]['view'] = $this->filterModuleConfigViewPath($config['view'], $moduleName);
-            }
+        if (isset($moduleConfig['view'])) {
+            $moduleConfig['view'][$moduleName] =  $this->filterModuleConfigViewPath($moduleConfig['view'][$moduleName], $moduleName);
         }
 
         return $moduleConfig;
@@ -193,4 +193,5 @@ class Module
         $result = $this->getRealPathAutoloadConfig($result);
         return $result;
     }
+
 }
