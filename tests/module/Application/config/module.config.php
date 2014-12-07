@@ -27,7 +27,9 @@ return [
                 'id'         => 2
             ],
             'convertions' => [
-                'id' => Router\ConvertId::class,
+                'id' => [
+                    'class_name' => Router\ConvertId::class
+                ],
             ],
         ],
     ],

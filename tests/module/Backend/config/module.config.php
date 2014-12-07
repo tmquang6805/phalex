@@ -27,9 +27,13 @@ return [
                 'id'         => 3,
             ],
             'convertions'  => [
-                'id' => Application\Router\ConvertId::class,
+                'id' => [
+                    'class_name' => Application\Router\ConvertId::class
+                ],
             ],
-            'before_match' => Router\Callback::class,
+            'before_match' => [
+                'class_name' => Router\Callback::class
+            ],
             'host_name'    => 'api.test-example.com',
         ],
     ],

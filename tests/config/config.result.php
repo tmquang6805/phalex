@@ -26,7 +26,9 @@ return [
                 'id'         => 2
             ],
             'convertions' => [
-                'id' => Application\Router\ConvertId::class,
+                'id' => [
+                    'class_name' => Application\Router\ConvertId::class
+                ],
             ],
         ],
         'be_home'              => [
@@ -50,9 +52,13 @@ return [
                 'id'         => 3,
             ],
             'convertions'  => [
-                'id' => Application\Router\ConvertId::class,
+                'id' => [
+                    'class_name' => Application\Router\ConvertId::class
+                ],
             ],
-            'before_match' => Backend\Router\Callback::class,
+            'before_match' => [
+                'class_name' => Backend\Router\Callback::class
+            ],
             'host_name'    => 'api.test-example.com',
         ],
         'api_add_article'      => [
