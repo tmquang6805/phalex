@@ -8,6 +8,8 @@
 
 namespace Phalex\Di;
 
+use Phalex\Mvc\Router;
+
 /**
  * Control setting/getting Phalcon DI
  *
@@ -25,6 +27,15 @@ class DiManager
     {
         $this->diFactory = $di;
     }
+    
+    /**
+     *
+     * @return Di
+     */
+    public function getDi()
+    {
+        return $this->diFactory;
+    }
 
     /**
      * Base on router config, init Di for router
@@ -38,17 +49,12 @@ class DiManager
             throw new Exception\RuntimeException('Cannot init DI for router. Cannot find router configuration');
         }
         $config = $config['router']->toArray();
+        $router = new Router($this->diFactory);
+        foreach ($config as $name => $routeInfo) {
+            $router->addRoute($name, $routeInfo);
+        }
 
-//        // Create router instance and set routes for it
-//        $router = new Router(false);
-//        $router->clear();
-//        $router->removeExtraSlashes(true);
-//        foreach ($config as $name => $info) {
-//            $this->addRoute($router, $name, $info);
-//        }
-//
-//        // Set router into DI
-//        $this->diFactory->set('router', $router, true);
+        $this->diFactory->set('router', $router, true);
 
         return $this;
     }
