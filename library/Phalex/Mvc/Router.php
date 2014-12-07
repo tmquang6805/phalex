@@ -12,6 +12,7 @@ use Phalcon\Mvc\Router as PhalconRouter;
 use Phalcon\Mvc\Router\Route;
 use Phalex\Mvc\Router\ConvertingInterface;
 use Phalex\Mvc\Router\BeforeMatchInterface;
+use Phalcon\DiInterface;
 
 /**
  * Extends from Phalcon\Mvc\Router
@@ -24,7 +25,7 @@ use Phalex\Mvc\Router\BeforeMatchInterface;
  */
 class Router extends PhalconRouter
 {
-    public function __construct()
+    public function __construct(DiInterface $di)
     {
         parent::__construct(false);
         $this->clear();
@@ -32,6 +33,7 @@ class Router extends PhalconRouter
         $this->setUriSource(PhalconRouter::URI_SOURCE_SERVER_REQUEST_URI);
         $this->setDefaultAction('index');
         $this->setDefaultController('index');
+        $this->setDI($di);
     }
 
     /**

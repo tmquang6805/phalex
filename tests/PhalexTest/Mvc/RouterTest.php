@@ -25,10 +25,19 @@ use Application\Router\BeforeMatchMock;
  */
 class RouterTest extends TestCase
 {
+    private function getDi()
+    {
+        $di = new PhalconDi();
+        $di->set('request', function () {
+            return new PhalconRequest();
+        });
+        return $di;
+    }
+    
     public function testConstruct()
     {
         Route::reset();
-        $router = new Router();
+        $router = new Router($this->getDi());
         $router->add('/static/route');
         $router->notFound(array(
             'module'     => 'module',
@@ -100,13 +109,13 @@ class RouterTest extends TestCase
      */
     public function testAddRouteRaiseException()
     {
-        (new Router())->addRoute('test', []);
+        (new Router($this->getDi()))->addRoute('test', []);
     }
 
     public function testAddRouteBasic()
     {
         Route::reset();
-        $router = new Router();
+        $router = new Router($this->getDi());
         $routes = [
             'home'              => [
                 'route'       => '/',
@@ -174,20 +183,10 @@ class RouterTest extends TestCase
         }
     }
 
-    private function getDi()
-    {
-        $di = new PhalconDi();
-        $di->set('request', function () {
-            return new PhalconRequest();
-        });
-        return $di;
-    }
-
     public function testAddRouteHttpMethods()
     {
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
         $routes = [
             'home'       => [
                 'route'       => '/',
@@ -249,8 +248,7 @@ class RouterTest extends TestCase
     public function testHostnameRouter()
     {
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('localhost/edit', [
             'route'       => '/edit',
@@ -305,8 +303,7 @@ class RouterTest extends TestCase
     {
         require_once 'tests/module/Application/src/Router/ConvertId.php';
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('edit-closure', [
             'route'       => '/edit/([1-9][0-9]*)',
@@ -355,8 +352,7 @@ class RouterTest extends TestCase
     public function testConvertionsRaiseMissConfig()
     {
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('edit-classname', [
             'route'       => '/edit2/([1-9][0-9]*)',
@@ -380,8 +376,7 @@ class RouterTest extends TestCase
     public function testConvertionsRaiseClassNotExists()
     {
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('edit-classname', [
             'route'       => '/edit2/([1-9][0-9]*)',
@@ -408,8 +403,7 @@ class RouterTest extends TestCase
     {
         require_once 'tests/module/Application/src/Router/Temp.php';
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('edit-classname', [
             'route'       => '/edit2/([1-9][0-9]*)',
@@ -435,7 +429,7 @@ class RouterTest extends TestCase
         require_once 'tests/module/Application/src/Router/BeforeMatchMock.php';
         Route::reset();
         $trace  = 0;
-        $router = new Router();
+        $router = new Router($this->getDi());
 
         $router->addRoute('fail', [
             'route'        => '/route-fail',
@@ -477,8 +471,7 @@ class RouterTest extends TestCase
         $excMsg = sprintf('"%s" must be implemented "%s"', BeforeMatchFail::class, BeforeMatchInterface::class);
         $this->setExpectedException(RuntimeException::class, $excMsg);
         Route::reset();
-        $router = new Router();
-        $router->setDI($this->getDi());
+        $router = new Router($this->getDi());
 
         $router->addRoute('edit-classname', [
             'route'       => '/edit2/([1-9][0-9]*)',
