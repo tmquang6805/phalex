@@ -15,7 +15,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
-
     public function testConstructRaiseExptionEmptyParameters()
     {
         $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
@@ -67,5 +66,4 @@ class ModuleTest extends TestCase
         $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
         $moduleMock->getModulesConfig();
     }
-
 }

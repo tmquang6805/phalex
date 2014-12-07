@@ -12,7 +12,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Module
 {
-
     /**
      *
      * @var array
@@ -32,8 +31,7 @@ class Module
             $this->modules = $cache->getRegisteredModules();
             $this->loadCachedModules();
             $this->cache   = $cache;
-        }
-        else {
+        } else {
             $this->loadModules($modules, array_unique($paths));
         }
     }
@@ -193,5 +191,4 @@ class Module
         $result = $this->getRealPathAutoloadConfig($result);
         return $result;
     }
-
 }
