@@ -123,7 +123,8 @@ class Module
         }
 
         if (isset($moduleConfig['view'])) {
-            $moduleConfig['view'][$moduleName] =  $this->filterModuleConfigViewPath($moduleConfig['view'][$moduleName], $moduleName);
+            $viewPath = $this->filterModuleConfigViewPath($moduleConfig['view'][$moduleName], $moduleName);
+            $moduleConfig['view'][$moduleName] =  $viewPath;
         }
 
         return $moduleConfig;
