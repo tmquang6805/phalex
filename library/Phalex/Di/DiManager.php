@@ -97,10 +97,34 @@ class DiManager
                 $msg = sprintf('Config for invokable service "%s" must be string data type', $serviceName);
                 throw new Exception\UnexpectedValueException($msg);
             }
-            $isShare = isset($shared[$serviceName]) ? $shared[$serviceName] : true;
+            $isShare = isset($shared[$serviceName]) ? (bool) $shared[$serviceName] : true;
             $this->diFactory->set($serviceName, $serviceClassName, $isShare);
         }
         return $this;
+    }
+
+    protected function setServiceFactories($serviceName, $serviceConfig, $isShare)
+    {
+        if (!is_string($serviceConfig) && !($isCallable = is_callable($serviceConfig))) {
+            $msg = sprintf('Config for factories service "%s" must be string or callable', $serviceName);
+            throw new Exception\UnexpectedValueException($msg);
+        }
+
+        $this->diFactory->set($serviceName, function () use ($serviceConfig, $isCallable) {
+            if ($isCallable) {
+                return $serviceConfig($this->diFactory);
+            }
+            
+            $obj = new $serviceConfig();
+            if (!$obj instanceof DiFactoryInterface) {
+                $msg = sprintf('Class "%s" must be implemented "%s"', $serviceConfig, DiFactoryInterface::class);
+                throw new Exception\RuntimeException($msg);
+            }
+            return $obj->createService($this->diFactory);
+        }, $isShare);
+
+
+//        $this->diFactory->set($serviceName, $obj->createService($this->diFactory), $isShare);
     }
 
     /**
@@ -119,23 +143,8 @@ class DiManager
         $factories = $smConfig['factories']->toArray();
         $shared    = isset($smConfig['shared']) ? $smConfig['shared']->toArray() : [];
         foreach ($factories as $serviceName => $serviceConfig) {
-            if (!is_string($serviceConfig) || !($isCallable = is_callable($serviceConfig))) {
-                $msg = sprintf('Config for factories service "%s" must be string or callable', $serviceName);
-                throw new Exception\UnexpectedValueException($msg);
-            }
-
-            $isShare = isset($shared[$serviceName]) ? $shared[$serviceName] : true;
-            if ($isCallable) {
-                $this->diFactory->set($serviceName, $serviceConfig($this->diFactory), $isShare);
-                continue;
-            }
-
-            $obj = new $serviceConfig();
-            if (!$obj instanceof DiFactoryInterface) {
-                $msg = sprintf('Class "%s" must be implemented "%s"', $serviceConfig, DiFactoryInterface::class);
-                throw new Exception\RuntimeException($msg);
-            }
-            $this->diFactory->set($serviceName, $obj->createService($this->diFactory), $isShare);
+            $isShare = isset($shared[$serviceName]) ? (bool) $shared[$serviceName] : true;
+            $this->setServiceFactories($serviceName, $serviceConfig, $isShare);
         }
 
         return $this;
