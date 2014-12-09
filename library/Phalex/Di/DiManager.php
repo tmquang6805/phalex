@@ -49,7 +49,7 @@ class DiManager
 
     /**
      *
-     * @return Di
+     * @return \Phalex\Di\Di
      */
     public function getDi()
     {

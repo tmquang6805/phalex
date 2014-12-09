@@ -119,4 +119,82 @@ class DiManagerTest extends TestCase
             }
         }
     }
+    
+    public function testInitInvokableServices()
+    {
+        $config = [
+            'service_manager' => [
+                'invokables' => [
+                    'ArrayObject' => \ArrayObject::class
+                ]
+            ],
+        ];
+        $diMock = $this->getMockBuilder(Di::class)
+                ->setConstructorArgs($config)
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config($config)));
+        $diMock->expects($this->exactly(count($config['service_manager']['invokables'])))
+                ->method('set');
+        $di = new DiManager($diMock);
+        $di->initInvokableServices();
+    }
+    
+    /**
+     * @expectedException \Phalex\Di\Exception\UnexpectedValueException
+     * @expectedExceptionMessage Config for invokable service "ArrayObject" must be string data type
+     */
+    public function testInitInvokableServicesRaiseException()
+    {
+        $config = [
+            'service_manager' => [
+                'invokables' => [
+                    'ArrayObject' => new \ArrayObject()
+                ]
+            ],
+        ];
+        $diMock = $this->getMockBuilder(Di::class)
+                ->setConstructorArgs($config)
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config($config)));
+        $di = new DiManager($diMock);
+        $di->initInvokableServices();
+    }
+    
+    public function testInitInvokableServicesChecked()
+    {
+        $config = [
+            'service_manager' => [],
+        ];
+        $diMock = $this->getMockBuilder(Di::class)
+                ->setConstructorArgs($config)
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config($config)));
+        $diMock->expects($this->never())
+                ->method('set');
+        $di = new DiManager($diMock);
+        $di->initInvokableServices();
+        
+        $config = [
+            'service_manager' => [
+                'invokables' => [
+                    'ArrayObject' => \ArrayObject::class
+                ]
+            ],
+        ];
+        $diMock = new Di($config);
+        $di = new DiManager($diMock);
+        $di->initInvokableServices();
+        $this->assertInstanceOf(Di::class, $di->getDi());
+        $this->assertTrue($di->getDi()->has('ArrayObject'));
+        $this->assertInstanceOf(\ArrayObject::class, $di->getDi()->get('ArrayObject'));
+    }
 }
