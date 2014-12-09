@@ -13,7 +13,7 @@ namespace Phalex\Di\Exception;
  *
  * @author quangtm
  */
-class UnexpectedValueException extends UnexpectedValueException
+class UnexpectedValueException extends \UnexpectedValueException
 {
     //put your code here
 }
