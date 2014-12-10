@@ -15,6 +15,7 @@ use Phalex\Mvc\Module\Cache as CacheModule;
 use Phalex\Config\Config as ConfigHandler;
 use Phalex\Config\Cache as CacheConf;
 use Phalex\Di;
+use Phalex\Loader\Autoloader;
 
 class Application
 {
@@ -32,12 +33,13 @@ class Application
 
     public function __construct(array $config)
     {
-        $cacheModule       = !isset($config['cache_module']) ? null : $this->getCacheModule($config['cache_module']);
-        $moduleHandler     = new Module($config['modules'], $config['autoload_module_paths'], $cacheModule);
-        $registeredModules = $moduleHandler->getRegisteredModules();
-        $auloadModulesConf = $moduleHandler->getModulesAutoloadConfig();
-        $entireAppConf     = $this->getAppConfig($moduleHandler, $config);
-        $this->diManager   = new Di\DiManager(new Di\Di($entireAppConf));
+        $cacheModule   = !isset($config['cache_module']) ? null : $this->getCacheModule($config['cache_module']);
+        $moduleHandler = new Module($config['modules'], $config['autoload_module_paths'], $cacheModule);
+        $entireAppConf = $this->getAppConfig($moduleHandler, $config);
+        $diFactory     = new Di\Di($entireAppConf);
+
+        $this->diManager = new Di\DiManager($diFactory);
+        $diFactory->set('moduleHandler', $moduleHandler, true);
     }
 
     /**
@@ -100,6 +102,16 @@ class Application
 
     public function run()
     {
-        echo 'Run project';
+        // autoload
+        // router
+        // service_manager
+        // register modules
+        // run
+//        try {
+            $diFactory = $this->diManager->getDi();
+        (new Autoloader($diFactory))->register();
+//        } catch (\Exception $exc) {
+//            echo $exc->getMessage();
+//        }
     }
 }

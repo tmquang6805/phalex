@@ -10,6 +10,7 @@ namespace Phalex\Di;
 
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Config;
+use Phalcon\Events\Manager as EventsManager;
 
 /**
  * Control setting/getting Phalcon DI
@@ -22,5 +23,19 @@ class Di extends FactoryDefault
     {
         parent::__construct();
         $this->set('config', new Config($entireAppConfig), true);
+        $this->setEventsManager();
+    }
+    
+    /**
+     * Override events manager default in Phalcon
+     * @return \Phalex\Di\Di
+     */
+    protected function setEventsManager()
+    {
+        $ev = new EventsManager();
+        $ev->enablePriorities(true);
+        $ev->collectResponses(true);
+        $this->set('eventsManager', $ev, true);
+        return $this;
     }
 }
