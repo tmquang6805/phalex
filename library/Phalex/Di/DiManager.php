@@ -105,16 +105,16 @@ class DiManager
 
     protected function setServiceFactories($serviceName, $serviceConfig, $isShare)
     {
-        if (!is_string($serviceConfig) && !($isCallable = is_callable($serviceConfig))) {
+        if (!($isCallable = is_callable($serviceConfig)) && !is_string($serviceConfig)) {
             $msg = sprintf('Config for factories service "%s" must be string or callable', $serviceName);
             throw new Exception\UnexpectedValueException($msg);
         }
-
+        
         $this->diFactory->set($serviceName, function () use ($serviceConfig, $isCallable) {
             if ($isCallable) {
                 return $serviceConfig($this->diFactory);
             }
-            
+
             $obj = new $serviceConfig();
             if (!$obj instanceof DiFactoryInterface) {
                 $msg = sprintf('Class "%s" must be implemented "%s"', $serviceConfig, DiFactoryInterface::class);
@@ -122,9 +122,6 @@ class DiManager
             }
             return $obj->createService($this->diFactory);
         }, $isShare);
-
-
-//        $this->diFactory->set($serviceName, $obj->createService($this->diFactory), $isShare);
     }
 
     /**

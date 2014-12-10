@@ -16,6 +16,7 @@ use Phalcon\Http\Request as PhalconRequest;
 use Phalcon\Config;
 use Phalcon\Mvc\Router\Route;
 use PhalexTest\Di\Mock\DateObject;
+use PhalexTest\Di\Mock\FactoryMock;
 
 /**
  * Description of DiManagerTest
@@ -256,21 +257,39 @@ class DiManagerTest extends TestCase
         $this->assertEquals($equal, $obj1->time === $obj2->time);
     }
 
-    /**
-     * @group service_factories
-     */
-    public function testInitFactoriedServices()
+    public function supplyTestInitFactoriedServices()
     {
-        $config = [
-            'service_manager' => [
-                'factories' => [
-                    'myObj' => function ($di) {
-                        $this->assertInstanceOf(Di::class, $di);
-                        return new \stdClass();
-                    }
-                ]
+        return [
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => function ($di) {
+                                $this->assertInstanceOf(Di::class, $di);
+                                return new DateObject;
+                            }
+                        ],
+                    ],
+                ],
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => FactoryMock::class
+                        ],
+                    ],
+                ],
             ],
         ];
+    }
+
+    /**
+     * @group service_factories
+     * @dataProvider supplyTestInitFactoriedServices
+     */
+    public function testInitFactoriedServices($config)
+    {
         $diMock = $this->getMockBuilder(Di::class)
                 ->setConstructorArgs($config)
                 ->getMock();
@@ -284,20 +303,47 @@ class DiManagerTest extends TestCase
         $di->initFactoriedServices();
     }
 
+    public function supplyTestInitFactoriesServicesRaiseException()
+    {
+        return [
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => new \stdClass()
+                        ]
+                    ],
+                ],
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => []
+                        ]
+                    ],
+                ],
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => 1.2
+                        ]
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /**
      * @group service_factories
+     * @dataProvider supplyTestInitFactoriesServicesRaiseException
      * @expectedException \Phalex\Di\Exception\UnexpectedValueException
      * @expectedExceptionMessage Config for factories service "myObj" must be string or callable
      */
-    public function testInitFactoriesServicesRaiseException()
+    public function testInitFactoriesServicesRaiseException($config)
     {
-        $config = [
-            'service_manager' => [
-                'factories' => [
-                    'myObj' => new \stdClass()
-                ]
-            ],
-        ];
         $diMock = $this->getMockBuilder(Di::class)
                 ->setConstructorArgs($config)
                 ->getMock();
@@ -311,9 +357,65 @@ class DiManagerTest extends TestCase
 
     /**
      * @group service_factories
+     * @group nham_nhi
+     * @expectedException \Phalex\Di\Exception\RuntimeException
+     * @expectedExceptionMessage Class "ArrayObject" must be implemented "Phalex\Di\DiFactoryInterface"
      */
-    public function testInitFactoriesServicesChecked()
+    public function testInitFactoriesServicesRaiseExceptionInterface()
     {
+        $config = [
+            'service_manager' => [
+                'factories' => [
+                    'myObj' => \ArrayObject::class
+                ],
+            ],
+        ];
+        $diMock = new Di($config);
+        $di     = new DiManager($diMock);
+        $di->initFactoriedServices();
+        $di->getDi()->get('myObj');
+    }
+
+    public function supplyTestInitFactoriesServicesChecked()
+    {
+        return [
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => function ($di) {
+                                $this->assertInstanceOf(Di::class, $di);
+                                return new DateObject;
+                            }
+                        ],
+                    ],
+                ],
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObj' => FactoryMock::class
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @group service_factories
+     * @dataProvider supplyTestInitFactoriesServicesChecked
+     */
+    public function testInitFactoriesServicesChecked($config)
+    {
+        $diMock = new Di($config);
+        $di     = new DiManager($diMock);
+        $di->initFactoriedServices();
+        $this->assertInstanceOf(Di::class, $di->getDi());
+        $this->assertTrue($di->getDi()->has('myObj'));
+        $this->assertInstanceOf(DateObject::class, $di->getDi()->get('myObj'));
+
         $config = [
             'service_manager' => [],
         ];
@@ -328,24 +430,7 @@ class DiManagerTest extends TestCase
                 ->method('set');
         $di     = new DiManager($diMock);
         $di->initFactoriedServices();
-
-        $config = [
-            'service_manager' => [
-                'factories' => [
-                    'myObj' => function () {
-                        return new \ArrayObject([]);
-                    }
-                ]
-            ],
-        ];
-        $diMock = new Di($config);
-        $di     = new DiManager($diMock);
-        $di->initFactoriedServices();
-        $this->assertInstanceOf(Di::class, $di->getDi());
-        $this->assertTrue($di->getDi()->has('myObj'));
-        $this->assertInstanceOf(\ArrayObject::class, $di->getDi()->get('myObj'));
     }
-
 
     public function supplyTestSharedFactoriesServices()
     {
@@ -358,7 +443,7 @@ class DiManagerTest extends TestCase
                                 return new DateObject();
                             }
                         ],
-                        'shared'     => [
+                        'shared'          => [
                             'myObject' => false
                         ],
                     ],
@@ -373,7 +458,33 @@ class DiManagerTest extends TestCase
                                 return new DateObject();
                             }
                         ],
-                        'shared'     => [
+                        'shared'          => [
+                            'myObject' => true
+                        ],
+                    ],
+                ],
+                true
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObject' => FactoryMock::class
+                        ],
+                        'shared'    => [
+                            'myObject' => false
+                        ],
+                    ],
+                ],
+                false
+            ],
+            [
+                [
+                    'service_manager' => [
+                        'factories' => [
+                            'myObject' => FactoryMock::class
+                        ],
+                        'shared'    => [
                             'myObject' => true
                         ],
                     ],
@@ -387,7 +498,6 @@ class DiManagerTest extends TestCase
      * @dataProvider supplyTestSharedFactoriesServices
      * @group service_factories
      * @group service_shared
-     * @group ttt
      */
     public function testSharedFactoriesServices($config, $equal)
     {
