@@ -357,7 +357,6 @@ class DiManagerTest extends TestCase
 
     /**
      * @group service_factories
-     * @group nham_nhi
      * @expectedException \Phalex\Di\Exception\RuntimeException
      * @expectedExceptionMessage Class "ArrayObject" must be implemented "Phalex\Di\DiFactoryInterface"
      */

@@ -9,6 +9,7 @@
 namespace Phalex\Loader;
 
 use Phalcon\Loader;
+use Phalcon\Events\Manager as EventsManager;
 use Phalex\Di\Di;
 use Zend\Stdlib\ArrayUtils;
 
@@ -31,11 +32,21 @@ class Autoloader
      */
     protected $loader;
 
+    /**
+     *
+     * @param Di $diFactory
+     */
     public function __construct(Di $diFactory)
     {
         $this->diFactory = $diFactory;
         $this->loader    = new Loader();
-        $this->loader->setEventsManager($diFactory->get('eventsManager'));
+
+        $ev = new EventsManager();
+        $ev->enablePriorities(true);
+        $ev->collectResponses(true);
+
+        $diFactory->set('autoloaderEventsManager', $ev, true);
+        $this->loader->setEventsManager($ev);
     }
 
     /**
@@ -47,11 +58,11 @@ class Autoloader
     protected function registerClassMap(array $classMap)
     {
         foreach ($classMap as $file) {
-            $arrClasses = include_once $file;
+            $arrClasses = require $file;
             if (!ArrayUtils::isHashTable($arrClasses, true)) {
                 throw new Exception\RuntimeException('Config autoload for classmap is invalid');
             }
-            
+
             if (!empty($arrClasses)) {
                 $this->loader->registerClasses($arrClasses);
             }
@@ -79,5 +90,12 @@ class Autoloader
             $this->registerClassMap($autoloadConf['classmap']);
         }
         $this->loader->register();
+        return $this;
+    }
+    
+    public function unregister()
+    {
+        $this->loader->unregister();
+        return $this;
     }
 }
