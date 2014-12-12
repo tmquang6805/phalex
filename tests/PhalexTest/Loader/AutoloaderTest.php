@@ -92,4 +92,66 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
         ));
         $loader->unregister();
     }
+    
+    public function supplyTestRegisterNamespacesRaiseException()
+    {
+        return [
+            [1],
+            ['a'],
+            [new \stdClass()],
+            [new \ArrayObject()],
+            [[]]
+        ];
+    }
+    
+    /**
+     * @expectedException Phalex\Loader\Exception\RuntimeException
+     * @expectedExceptionMessage Config autoload for namespace is invalid
+     * @dataProvider supplyTestRegisterNamespacesRaiseException
+     */
+    public function testRegisterNamespacesRaiseException($namespaces)
+    {
+        $moduleHandlerMock = $this->getMockBuilder(Module::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $moduleHandlerMock->expects($this->once())
+                ->method('getModulesAutoloadConfig')
+                ->will($this->returnValue(['namespaces' => $namespaces]));
+
+        $diMock = $this->getMockBuilder(Di::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('moduleHandler')
+                ->will($this->returnValue($moduleHandlerMock));
+        $loader = new Autoloader($diMock);
+
+        $loader->register();
+    }
+    
+    /**
+     * @expectedException Phalex\Loader\Exception\RuntimeException
+     * @expectedExceptionMessage Config autoload for classmap is invalid
+     */
+    public function testRegisterClassMapRaiseException()
+    {
+        $moduleHandlerMock = $this->getMockBuilder(Module::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $moduleHandlerMock->expects($this->once())
+                ->method('getModulesAutoloadConfig')
+                ->will($this->returnValue(['classmap' => [getcwd() . '/tests/config/wrong_classmap.php']]));
+
+        $diMock = $this->getMockBuilder(Di::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('moduleHandler')
+                ->will($this->returnValue($moduleHandlerMock));
+        $loader = new Autoloader($diMock);
+
+        $loader->register();
+    }
 }
