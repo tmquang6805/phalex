@@ -34,5 +34,45 @@ class ConfigTest extends TestCase
                 ->getConfig();
         $this->assertInternalType('array', $resultConfig);
         $this->assertEquals($expected, $resultConfig);
+
+        $resultConfig = (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+                ->getConfig();
+        $this->assertInternalType('array', $resultConfig);
+        $this->assertEquals($expected, $resultConfig);
+    }
+
+    /**
+     * @expectedExceptionMessage The config in "./tests/config/wrong_config_autoload.php" file must be array data type
+     * @expectedException Phalex\Config\Exception\RuntimeException
+     */
+    public function testGetConfigRaiseExceptionFile()
+    {
+        $configApp     = require './tests/module/Application/config/module.config.php';
+        $configBe      = require './tests/module/Backend/config/module.config.php';
+        $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        (new Config($modulesConfig, './tests/config/wrong_config_autoload.php'))
+                ->getConfig();
+    }
+
+    /**
+     * @expectedExceptionMessage Config view path is not valid
+     * @expectedException Phalex\Config\Exception\InvalidArgumentException
+     */
+    public function testGetConfigRaiseExceptionViewPath()
+    {
+        $modulesConfig = require './tests/config/wrong_config_autoload_view_path.php';
+        (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+                ->getConfig();
+    }
+    
+    /**
+     * @expectedExceptionMessage Config view path for "not_exist" module is invalid
+     * @expectedException Phalex\Config\Exception\RuntimeException
+     */
+    public function testGetConfigRaiseExceptionViewPathNotExisted()
+    {
+        $modulesConfig = require './tests/config/wrong_config_autoload_view_path_not_exist.php';
+        (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+                ->getConfig();
     }
 }

@@ -66,7 +66,7 @@ class Config
             }
             $configs = ArrayUtils::merge($configs, require $file);
         }
-
+        
         return $this->cleanUp($configs);
     }
 
