@@ -20,6 +20,7 @@ use Phalcon\DiInterface;
  *  Remove extra slashes
  *  Set URI Source is $_SERVER['REQUEST_URI']
  *  Controller and Action is index
+ *  Default not found to erro Controller and notFound Action
  *
  * @author quangtm
  */
@@ -34,6 +35,10 @@ class Router extends PhalconRouter
         $this->setDefaultAction('index');
         $this->setDefaultController('index');
         $this->setDI($di);
+        $this->notFound([
+            'controller' => 'error',
+            'action'     => 'not-found',
+        ]);
     }
 
     /**

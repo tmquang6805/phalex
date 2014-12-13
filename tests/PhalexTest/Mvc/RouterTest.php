@@ -55,6 +55,19 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @group dev
+     */
+    public function testNotFoundDefault()
+    {
+        Route::reset();
+        $router = new Router($this->getDi());
+        $router->add('/static/route');
+        $router->handle();
+        $this->assertEquals($router->getControllerName(), 'error');
+        $this->assertEquals($router->getActionName(), 'not-found');
+    }
+
+    /**
      * @depends testConstruct
      * @param Router $router
      */
