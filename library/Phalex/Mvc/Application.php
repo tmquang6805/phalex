@@ -10,6 +10,7 @@
 namespace Phalex\Mvc;
 
 use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Mvc\Application as PhalconApplication;
 use Phalex\Mvc\Module;
 use Phalex\Mvc\Module\Cache as CacheModule;
 use Phalex\Config\Config as ConfigHandler;
@@ -102,16 +103,26 @@ class Application
 
     public function run()
     {
-        // autoload
-        // router
-        // service_manager
-        // register modules
-        // run
-//        try {
-            $diFactory = $this->diManager->getDi();
-        (new Autoloader($diFactory))->register();
-//        } catch (\Exception $exc) {
-//            echo $exc->getMessage();
-//        }
+        try {
+            $diFactory     = $this->diManager->getDi();
+            $moduleHandler = $diFactory->get('moduleHandler');
+
+            // Register autoloader
+            (new Autoloader($diFactory))->register();
+
+            // Register services and routers
+            $this->diManager->initInvokableServices()
+                    ->initFactoriedServices()
+                    ->initRouterDi();
+
+            // Register modules
+            $application = new PhalconApplication($diFactory);
+            $application->setEventsManager($diFactory['eventsManager']);
+            $application->registerModules($moduleHandler->getRegisteredModules());
+            
+//            $application->handle()->send();
+        } catch (\Exception $exc) {
+            echo $exc->getMessage();
+        }
     }
 }
