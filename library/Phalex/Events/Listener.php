@@ -28,14 +28,6 @@ class Listener
         $this->di = $di;
     }
     
-    private function listenEvents($listener, $eventName)
-    {
-        $this->di
-                ->get('eventsManager')
-                ->attach($eventName, $listener, PHP_INT_MAX);
-        return $this;
-    }
-
     /**
      * Listen application's events
      * @param \Phalex\Events\Listener\Application $listener
@@ -43,7 +35,10 @@ class Listener
      */
     public function listenApplicationEvents(Listener\Application $listener)
     {
-        return $this->listenEvents($listener, 'application');
+        $this->di
+                ->get('eventsManager')
+                ->attach('application', $listener, PHP_INT_MAX);
+        return $this;
     }
 
     /**
@@ -53,6 +48,9 @@ class Listener
      */
     public function listenDispatchEvents(Listener\Dispatch $listener)
     {
-        return $this->listenEvents($listener, 'dispatch');
+        $this->di
+                ->get('dispatchEventsManager')
+                ->attach('dispatch', $listener, PHP_INT_MAX);
+        return $this;
     }
 }

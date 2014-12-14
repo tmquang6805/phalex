@@ -43,7 +43,6 @@ class ListenerTest extends TestCase
                 ->getMock();
         $di->expects($this->once())
                 ->method('get')
-                ->with('eventsManager')
                 ->will($this->returnValue($this->em));
 
         $this->listener = new Listener($di);

@@ -86,7 +86,12 @@ class DiManager
      */
     public function initInvokableServices()
     {
-        $smConfig = $this->getConfig()['service_manager'];
+        $config = $this->getConfig();
+        if (!isset($config['service_manager'])) {
+            return $this;
+        }
+        
+        $smConfig = $config['service_manager'];
         if (!isset($smConfig['invokables'])) {
             return $this;
         }
@@ -133,7 +138,12 @@ class DiManager
      */
     public function initFactoriedServices()
     {
-        $smConfig = $this->getConfig()['service_manager'];
+        $config = $this->getConfig();
+        if (!isset($config['service_manager'])) {
+            return $this;
+        }
+        
+        $smConfig = $config['service_manager'];
         if (!isset($smConfig['factories'])) {
             return $this;
         }

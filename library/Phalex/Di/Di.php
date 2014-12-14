@@ -11,6 +11,7 @@ namespace Phalex\Di;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Config;
 use Phalcon\Events\Manager as EventsManager;
+use Phalex\Mvc\Dispatcher;
 
 /**
  * Control setting/getting Phalcon DI
@@ -24,6 +25,7 @@ class Di extends FactoryDefault
         parent::__construct();
         $this->set('config', new Config($entireAppConfig), true);
         $this->setEventsManager();
+        $this->set('dispatcher', new Dispatcher($this), true);
     }
     
     /**

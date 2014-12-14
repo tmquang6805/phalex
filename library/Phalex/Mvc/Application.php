@@ -17,6 +17,7 @@ use Phalex\Config\Config as ConfigHandler;
 use Phalex\Config\Cache as CacheConf;
 use Phalex\Di;
 use Phalex\Loader\Autoloader;
+use Phalex\Events\Listener;
 
 class Application
 {
@@ -115,12 +116,17 @@ class Application
                     ->initFactoriedServices()
                     ->initRouterDi();
 
+            // Init listeners
+            (new Listener($diFactory))
+                    ->listenApplicationEvents(new Listener\Application())
+                    ->listenDispatchEvents(new Listener\Dispatch());
+
             // Register modules
             $application = new PhalconApplication($diFactory);
             $application->setEventsManager($diFactory['eventsManager']);
             $application->registerModules($moduleHandler->getRegisteredModules());
-            
-//            $application->handle()->send();
+
+            $application->handle()->send();
         } catch (\Exception $exc) {
             echo $exc->getMessage();
         }
