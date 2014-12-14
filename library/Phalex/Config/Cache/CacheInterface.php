@@ -15,4 +15,5 @@ namespace Phalex\Config\Cache;
 interface CacheInterface
 {
     public function getConfig();
+    public function setConfig(array $config);
 }

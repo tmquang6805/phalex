@@ -23,4 +23,9 @@ class File implements CacheInterface
     {
         return false;
     }
+
+    public function setConfig(array $config)
+    {
+        var_dump($config);
+    }
 }

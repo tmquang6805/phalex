@@ -102,6 +102,9 @@ class Config
     protected function cleanUp(array $configs)
     {
         $configs['view'] = !isset($configs['view']) ? [] : $this->filterViewPath($configs['view']);
+        if ($this->cache instanceof Cache\CacheInterface) {
+            $this->cache->setConfig($configs);
+        }
         return $configs;
     }
 }
