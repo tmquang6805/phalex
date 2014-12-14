@@ -8,6 +8,11 @@
 
 namespace Phalex\Events\Listener;
 
+use Phalcon\Events\Event;
+use Phalex\Mvc\Dispatcher;
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine as ViewEngine;
+
 /**
  * Description of Dispatch
  *
@@ -15,33 +20,27 @@ namespace Phalex\Events\Listener;
  */
 class Dispatch
 {
-    public function beforeDispatchLoop()
+    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
-        xdebug_var_dump(__METHOD__);
     }
-    
-    public function beforeExecuteRoute()
+
+    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        xdebug_var_dump(__METHOD__);
     }
-    
-    public function afterExecuteRoute()
+
+    public function afterExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        xdebug_var_dump(__METHOD__);
     }
-    
+
     public function beforeNotFoundAction()
     {
-        xdebug_var_dump(__METHOD__);
     }
-    
+
     public function beforeException()
     {
-        xdebug_var_dump(__METHOD__);
     }
-    
+
     public function afterDispatchLoop()
     {
-        xdebug_var_dump(__METHOD__);
     }
 }
