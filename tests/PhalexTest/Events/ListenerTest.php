@@ -14,6 +14,8 @@ use Phalex\Events\Listener\Application as ListenerApplication;
 use Phalex\Events\Listener\Dispatch as ListenerDispatch;
 use Phalex\Di\Di;
 use Phalcon\Events\Manager as EM;
+use Phalcon\Mvc\Application as PhalconApp;
+use Phalex\Mvc\Dispatcher;
 
 /**
  * Description of ListenerTest
@@ -55,6 +57,8 @@ class ListenerTest extends TestCase
     
     public function testListenApplicationEvents()
     {
+        $appMock = $this->getMock(PhalconApp::class);
+        
         $listener = $this->getMockBuilder(ListenerApplication::class)
                 ->getMock();
         $listener->expects($this->once())
@@ -69,14 +73,18 @@ class ListenerTest extends TestCase
                 ->method('afterHandleRequest');
         $this->listener->listenApplicationEvents($listener);
         $this->em->fire('application:boot', null, null);
-        $this->em->fire('application:beforeStartModule', null, null);
-        $this->em->fire('application:afterStartModule', null, null);
-        $this->em->fire('application:beforeHandleRequest', null, null);
-        $this->em->fire('application:afterHandleRequest', null, null);
+        $this->em->fire('application:beforeStartModule', $appMock, null);
+        $this->em->fire('application:afterStartModule', $appMock, null);
+        $this->em->fire('application:beforeHandleRequest', $appMock, null);
+        $this->em->fire('application:afterHandleRequest', $appMock, null);
     }
     
     public function testListenDispatchEvents()
     {
+        $dispatcherMock = $this->getMockBuilder(Dispatcher::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        
         $listener = $this->getMockBuilder(ListenerDispatch::class)
                 ->getMock();
         $listener->expects($this->once())
@@ -92,11 +100,11 @@ class ListenerTest extends TestCase
         $listener->expects($this->once())
                 ->method('afterDispatchLoop');
         $this->listener->listenDispatchEvents($listener);
-        $this->em->fire('dispatch:beforeDispatchLoop', null, null);
-        $this->em->fire('dispatch:beforeExecuteRoute', null, null);
-        $this->em->fire('dispatch:afterExecuteRoute', null, null);
-        $this->em->fire('dispatch:beforeNotFoundAction', null, null);
-        $this->em->fire('dispatch:beforeException', null, null);
-        $this->em->fire('dispatch:afterDispatchLoop', null, null);
+        $this->em->fire('dispatch:beforeDispatchLoop', $dispatcherMock, null);
+        $this->em->fire('dispatch:beforeExecuteRoute', $dispatcherMock, null);
+        $this->em->fire('dispatch:afterExecuteRoute', $dispatcherMock, null);
+        $this->em->fire('dispatch:beforeNotFoundAction', $dispatcherMock, null);
+        $this->em->fire('dispatch:beforeException', $dispatcherMock, null);
+        $this->em->fire('dispatch:afterDispatchLoop', $dispatcherMock, null);
     }
 }
