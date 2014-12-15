@@ -10,6 +10,7 @@ namespace Phalex\Events\Listener;
 
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Application as PhalconApp;
+use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 use Phalex\Mvc\View;
 
 /**
@@ -19,9 +20,14 @@ use Phalex\Mvc\View;
  */
 class Application
 {
-    public function boot()
+    public function boot(Event $event, PhalconApp $app)
     {
-        //xdebug_var_dump(__METHOD__);
+        $router = $app->router;
+        $router->handle($router->getRewriteUri());
+        if (!$router->wasMatched()) {
+            throw new DispatchException('Cannot match route');
+        }
+        $app->getDI()->set('matchedRoute', $router->getMatchedRoute());
     }
 
     public function beforeStartModule(Event $event, PhalconApp $app, $moduleName)
@@ -35,18 +41,13 @@ class Application
         $di->set('view', new View($options), true);
     }
 
-    public function afterStartModule(Event $event, PhalconApp $app, $moduleName)
-    {
-        //        xdebug_var_dump(__METHOD__, $moduleName);
-    }
-
-    public function beforeHandleRequest()
-    {
-        //        xdebug_var_dump(__METHOD__);
-    }
-
-    public function afterHandleRequest()
-    {
-        //        xdebug_var_dump(__METHOD__);
-    }
+//    public function afterStartModule(Event $event, PhalconApp $app, $moduleName)
+//    {
+//    }
+//    public function beforeHandleRequest()
+//    {
+//    }
+//    public function afterHandleRequest()
+//    {
+//    }
 }

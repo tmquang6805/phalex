@@ -92,19 +92,4 @@ class ApplicationTest extends TestCase
         ];
         $this->assertEquals($engines, $view->getRegisteredEngines());
     }
-
-    public function testAfterStartModule()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function testBeforeHandleRequest()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function testAfterHandleRequest()
-    {
-        $this->markTestIncomplete();
-    }
 }
