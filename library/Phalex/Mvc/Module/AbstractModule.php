@@ -20,10 +20,16 @@ abstract class AbstractModule implements ModuleDefinitionInterface
     abstract public function getConfig();
     abstract public function getAutoloaderConfig();
 
+    /**
+     * @codeCoverageIgnore
+     */
     final public function registerAutoloaders()
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function registerServices($dependencyInjector)
     {
     }
