@@ -54,9 +54,6 @@ class RouterTest extends TestCase
         return $router;
     }
 
-    /**
-     * @group dev
-     */
     public function testNotFoundDefault()
     {
         Route::reset();
