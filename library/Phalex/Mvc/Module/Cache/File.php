@@ -22,4 +22,12 @@ class File implements CacheInterface
     public function getAutoloadModulesConfig()
     {
     }
+
+    public function setAutoloadModulesConfig(array $autoloadConfig)
+    {
+    }
+
+    public function setRegisteredModules(array $modules)
+    {
+    }
 }

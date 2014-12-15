@@ -4,8 +4,6 @@ namespace PhalexTest\Mvc;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Mvc\Module;
-use Phalex\Mvc\Exception\RuntimeException;
-use Phalex\Mvc\Exception\InvalidArgumentException;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -15,16 +13,22 @@ use Zend\Stdlib\ArrayUtils;
  */
 class ModuleTest extends TestCase
 {
+    /**
+     * @expectedException Phalex\Mvc\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Invalid parameters for init phalcon extesion
+     */
     public function testConstructRaiseExptionEmptyParameters()
     {
-        $this->setExpectedException(InvalidArgumentException::class, 'Invalid parameters for init phalcon extesion');
         new Module([], []);
     }
 
+    /**
+     * @expectedException Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage Not found module "Application"
+     */
     public function testConstructRaiseExceptionNotFoundClass()
     {
         $moduleName = 'Application';
-        $this->setExpectedException(RuntimeException::class, sprintf('Cannot autoload module "%s"', $moduleName));
         new Module([$moduleName], ['./test']);
     }
 
@@ -47,23 +51,56 @@ class ModuleTest extends TestCase
 
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
-     * @expectedExceptionMessage The autoloader configuration for module "Application" is invalid
+     * @expectedExceptionMessage Class "WrongModule\Module" must be extended from Phalex\Mvc\Module\AbstractModule
      */
-    public function testGetModulesAutoloadConfigRaiseException()
+    public function testGetModulesConfigRaiseException()
     {
-        $moduleNames = ['Application', 'Backend'];
-        $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
-        $moduleMock->getModulesAutoloadConfig();
+        $moduleNames = ['Application', 'WrongModule'];
+        $moduleMock  = new Module($moduleNames, ['./tests/module']);
+        $moduleMock->getModulesConfig();
     }
 
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
-     * @expectedExceptionMessage The view path for module "Application" is invalid
+     * @expectedExceptionMessage Class "WrongModule\Module" must be extended from Phalex\Mvc\Module\AbstractModule
      */
-    public function testGetModulesConfigRaiseException()
+    public function testGetModulesAutoloadConfigRaiseException()
     {
-        $moduleNames = ['Application', 'Backend'];
-        $moduleMock  = new ModuleMock($moduleNames, ['./tests/module']);
+        $moduleNames = ['Application', 'WrongModule'];
+        $moduleMock  = new Module($moduleNames, ['./tests/module']);
+        $moduleMock->getModulesAutoloadConfig();
+    }
+    
+    /**
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage The autoloader configuration for module "WrongModuleConfig" is invalid
+     */
+    public function testGetModulesAutoloadConfigWrongDataType()
+    {
+        $moduleNames = ['Application', 'WrongModuleConfig'];
+        $moduleMock  = new Module($moduleNames, ['./tests/module']);
+        $moduleMock->getModulesAutoloadConfig();
+    }
+    
+    /**
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage The configuration for module "WrongModuleConfig" is invalid
+     */
+    public function testGetModulesConfigWrongDataType()
+    {
+        $moduleNames = ['Application', 'WrongModuleConfig'];
+        $moduleMock  = new Module($moduleNames, ['./tests/module']);
+        $moduleMock->getModulesConfig();
+    }
+    
+    /**
+     * @expectedException \Phalex\Mvc\Exception\RuntimeException
+     * @expectedExceptionMessage The view path for module "WrongModuleViewPath" is invalid
+     */
+    public function testGetModulesConfigWrongViewPath()
+    {
+        $moduleNames = ['Application', 'WrongModuleViewPath'];
+        $moduleMock  = new Module($moduleNames, ['./tests/module']);
         $moduleMock->getModulesConfig();
     }
 }

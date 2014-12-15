@@ -15,5 +15,7 @@ namespace Phalex\Mvc\Module\Cache;
 interface CacheInterface
 {
     public function getRegisteredModules();
+    public function setRegisteredModules(array $modules);
     public function getAutoloadModulesConfig();
+    public function setAutoloadModulesConfig(array $autoloadConfig);
 }
