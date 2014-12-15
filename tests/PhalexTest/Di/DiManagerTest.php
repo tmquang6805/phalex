@@ -511,4 +511,25 @@ class DiManagerTest extends TestCase
         $this->assertInstanceOf(DateObject::class, $obj2);
         $this->assertEquals($equal, $obj1->time === $obj2->time);
     }
+    
+    /**
+     * @group service_invokables
+     * @group service_factories
+     */
+    public function testInitServicesWithoutConfig()
+    {
+        $config = [];
+        $diMock = $this->getMockBuilder(Di::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config($config)));
+        $diMock->expects($this->never())
+                ->method('set');
+        $di     = new DiManager($diMock);
+        $di->initInvokableServices();
+        $di->initFactoriedServices();
+    }
 }
