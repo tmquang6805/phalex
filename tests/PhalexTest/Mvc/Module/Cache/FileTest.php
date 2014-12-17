@@ -177,9 +177,9 @@ class FileTest extends TestCase
      */
     public function testSetAutoloadModules(File $cache)
     {
-        touch($this->fileRegisterModule);
+        touch($this->fileAutoloadModule);
         $cache->setAutoloadModulesConfig(require './tests/config/autoload.result.php');
-        $this->assertTrue(file_exists($this->fileRegisterModule));
+        $this->assertTrue(file_exists($this->fileAutoloadModule));
         return $cache;
     }
     
