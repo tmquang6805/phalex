@@ -15,19 +15,51 @@ namespace Phalex\Mvc\Module\Cache;
  */
 class File implements CacheInterface
 {
-    public function getRegisteredModules()
+    use \Phalex\Config\Cache\FileTrait
     {
+        getConfig as protected;
+        setConfig as protected;
     }
     
-    public function getAutoloadModulesConfig()
+    /**
+     *
+     * @var string
+     */
+    protected $registerModulesFile;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $autoloadModulesFile;
+
+    public function __construct(array $options)
     {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $this->validateConfig($options);
+        $key = rtrim($options['dir'], $ds) . $ds . $options['key'];
+        $this->registerModulesFile = $key . '_register_modules.dat';
+        $this->autoloadModulesFile = $key . '_autoload.dat';
     }
 
-    public function setAutoloadModulesConfig(array $autoloadConfig)
+    public function getRegisteredModules()
     {
+        return $this->getConfig($this->registerModulesFile);
     }
 
     public function setRegisteredModules(array $modules)
     {
+        return $this->setConfig($modules, $this->registerModulesFile);
+    }
+
+    public function getAutoloadModulesConfig()
+    {
+        return $this->getConfig($this->autoloadModulesFile);
+    }
+
+    public function setAutoloadModulesConfig(array $autoloadConfig)
+    {
+        return $this->setConfig($autoloadConfig, $this->autoloadModulesFile);
     }
 }

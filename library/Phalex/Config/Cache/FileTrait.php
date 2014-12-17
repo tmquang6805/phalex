@@ -11,8 +11,8 @@ trait FileTrait
      * @var string
      */
     protected $fileCache;
-
-    public function __construct(array $options)
+    
+    protected function validateConfig(array $options)
     {
         if (!isset($options['key']) || !isset($options['dir'])) {
             throw new Exception\InvalidArgumentException(sprintf('Invalid options when create instance %s', __CLASS__));
@@ -25,24 +25,22 @@ trait FileTrait
         if (!is_dir($options['dir']) || !is_writable($options['dir'])) {
             throw new Exception\UnexpectedValueException('The "dir" config must be writable folder');
         }
-
-        $ds = DIRECTORY_SEPARATOR;
-        
-        $this->fileCache = rtrim($options['dir'], $ds) . $ds . $options['key'] . '.dat';
     }
 
     /**
      * Get config from file cache
+     * @param string $file
      * @return array|false Return array config when file existed and readable, otherwise return false
      * @throws Exception\RuntimeException
      */
-    public function getConfig()
+    public function getConfig($file = null)
     {
-        if (file_exists($this->fileCache)) {
-            if (!is_readable($this->fileCache)) {
-                throw new Exception\RuntimeException(sprintf('"%s" cannot read', $this->fileCache));
+        $file = !empty($file) ? $file : $this->fileCache;
+        if (file_exists($file)) {
+            if (!is_readable($file)) {
+                throw new Exception\RuntimeException(sprintf('"%s" cannot read', $file));
             }
-            return require $this->fileCache;
+            return require $file;
         }
         return false;
     }
@@ -50,14 +48,16 @@ trait FileTrait
     /**
      * Set config to file
      * @param array $config
+     * @param string $file
      */
-    public function setConfig(array $config)
+    public function setConfig(array $config, $file = null)
     {
-        if (file_exists($this->fileCache)) {
-            unlink($this->fileCache);
+        $file = !empty($file) ? $file : $this->fileCache;
+        if (file_exists($file)) {
+            unlink($file);
         }
         (new PhpArray())
                 ->setUseBracketArraySyntax(true)
-                ->toFile($this->fileCache, $config);
+                ->toFile($file, $config);
     }
 }

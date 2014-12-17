@@ -16,4 +16,12 @@ namespace Phalex\Config\Cache;
 class File implements CacheInterface
 {
     use FileTrait;
+
+    public function __construct(array $options)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $this->validateConfig($options);
+        $this->fileCache = rtrim($options['dir'], $ds) . $ds . $options['key'] . '_merged_config.dat';
+    }
 }

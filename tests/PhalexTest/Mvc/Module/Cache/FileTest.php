@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace PhalexTest\Config\Cache;
+namespace PhalexTest\Mvc\Module\Cache;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use Phalex\Config\Cache\File;
+use Phalex\Mvc\Module\Cache\File;
 
 /**
  * Description of FileTest
@@ -19,7 +19,8 @@ use Phalex\Config\Cache\File;
 class FileTest extends TestCase
 {
     private $folder;
-    private $file;
+    private $fileRegisterModule;
+    private $fileAutoloadModule;
 
     protected function setUp()
     {
@@ -27,7 +28,8 @@ class FileTest extends TestCase
         if (!is_dir($this->folder)) {
             mkdir($this->folder, 0755, true);
         }
-        $this->file = $this->folder . DIRECTORY_SEPARATOR . 'test_merged_config.dat';
+        $this->fileRegisterModule = $this->folder . DIRECTORY_SEPARATOR . 'test_register_modules.dat';
+        $this->fileAutoloadModule = $this->folder . DIRECTORY_SEPARATOR . 'test_autoload.dat';
     }
     
     public function supplyTestConstructorRaiseExceptionInvalidOptions()
@@ -52,7 +54,7 @@ class FileTest extends TestCase
     }
     /**
      * @expectedException Phalex\Config\Cache\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid options when create instance Phalex\Config\Cache\File
+     * @expectedExceptionMessage Invalid options when create instance Phalex\Mvc\Module\Cache\File
      * @dataProvider supplyTestConstructorRaiseExceptionInvalidOptions
      */
     public function testConstructorRaiseExceptionInvalidOptions($data)
@@ -117,10 +119,15 @@ class FileTest extends TestCase
             'dir' => $this->folder
         ]);
         
-        if (file_exists($this->file)) {
-            unlink($this->file);
+        if (file_exists($this->fileRegisterModule)) {
+            unlink($this->fileRegisterModule);
         }
-        $this->assertFalse(file_exists($this->file));
+        
+        if (file_exists($this->fileAutoloadModule)) {
+            unlink($this->fileAutoloadModule);
+        }
+        $this->assertFalse(file_exists($this->fileRegisterModule));
+        $this->assertFalse(file_exists($this->fileAutoloadModule));
         return $fileCache;
     }
     
@@ -128,41 +135,60 @@ class FileTest extends TestCase
      * @depends testConstructorSuccess
      * @param File $cache
      */
-    public function testGetConfigFalse(File $cache)
+    public function testGetRegisteredModulesFalse(File $cache)
     {
-        $this->assertFalse($cache->getConfig());
+        $this->assertFalse($cache->getRegisteredModules());
     }
     
     /**
      * @depends testConstructorSuccess
      * @param File $cache
      */
-    public function testSetConfig(File $cache)
+    public function testGetAutoloadModulesFalse(File $cache)
     {
-        touch($this->file);
-        $cache->setConfig(require './tests/config/config.result.php');
-        $this->assertTrue(file_exists($this->file));
+        $this->assertFalse($cache->getAutoloadModulesConfig());
+    }
+    
+    /**
+     * @depends testConstructorSuccess
+     * @param File $cache
+     */
+    public function testSetRegisteredModules(File $cache)
+    {
+        touch($this->fileRegisterModule);
+        $cache->setRegisteredModules(require './tests/config/module_register.result.php');
+        $this->assertTrue(file_exists($this->fileRegisterModule));
+        return $cache;
+    }
+    
+      
+    /**
+     * @depends testSetRegisteredModules
+     * @param File $cache
+     */
+    public function testSetRegisterSuccess(File $cache)
+    {
+        $this->assertEquals(require './tests/config/module_register.result.php', $cache->getRegisteredModules());
+    }
+    
+    /**
+     * @depends testConstructorSuccess
+     * @param File $cache
+     */
+    public function testSetAutoloadModules(File $cache)
+    {
+        touch($this->fileRegisterModule);
+        $cache->setAutoloadModulesConfig(require './tests/config/autoload.result.php');
+        $this->assertTrue(file_exists($this->fileRegisterModule));
         return $cache;
     }
     
     /**
-     * @depends testSetConfig
+     * @depends testSetAutoloadModules
      * @param File $cache
      */
-    public function testConfigSuccess(File $cache)
+    public function testSetAutoloadSuccess(File $cache)
     {
-        $this->assertEquals(require './tests/config/config.result.php', $cache->getConfig());
-    }
-    
-    /**
-     * @depends testSetConfig
-     * @param File $cache
-     */
-    public function testConfigRaiseException(File $cache)
-    {
-        $errMsg = sprintf('"%s" cannot read', $this->file);
-        $this->setExpectedException(\Phalex\Config\Cache\Exception\RuntimeException::class, $errMsg);
-        chmod($this->file, 0333);
-        $cache->getConfig();
+        $this->assertEquals(require './tests/config/autoload.result.php', $cache->getAutoloadModulesConfig());
     }
 }
