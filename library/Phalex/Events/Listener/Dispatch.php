@@ -35,15 +35,12 @@ class Dispatch
 
         //Use odd parameters as keys and even as values
         foreach ($params as $number => $value) {
-            if (!is_int($number)) {
-                $keyParams[$number] = $value;
-                unset($params[$number]);
-            } elseif ($number & 1) {
+            if ($number & 1) {
                 $keyParams[$params[$number - 1]] = $value;
                 unset($params[$number - 1], $params[$number]);
             }
         }
-
+        
         //Override parameters
         $dispatcher->setParams($keyParams);
         return $this;

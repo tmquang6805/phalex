@@ -46,10 +46,10 @@ class RouterTest extends TestCase
             'action'     => 'action'
         ));
         $router->handle();
-        $this->assertEquals($router->getControllerName(), 'controller');
-        $this->assertEquals($router->getActionName(), 'action');
-        $this->assertEquals($router->getModuleName(), 'module');
-        $this->assertEquals($router->getNamespaceName(), 'namespace');
+        $this->assertEquals('controller', $router->getControllerName());
+        $this->assertEquals('action', $router->getActionName());
+        $this->assertEquals('module', $router->getModuleName());
+        $this->assertEquals('namespace', $router->getNamespaceName());
 
         return $router;
     }
@@ -60,8 +60,8 @@ class RouterTest extends TestCase
         $router = new Router($this->getDi());
         $router->add('/static/route');
         $router->handle();
-        $this->assertEquals($router->getControllerName(), 'error');
-        $this->assertEquals($router->getActionName(), 'not-found');
+        $this->assertEquals('error', $router->getControllerName());
+        $this->assertEquals('not-found', $router->getActionName());
     }
 
     /**

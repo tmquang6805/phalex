@@ -65,7 +65,7 @@ class ApplicationTest extends TestCase
         Route::reset();
         $router = new Router($di);
         $router->addRoute('controller/action', [
-            'route'       => '/:controller/:action',
+            'route'       => '/test-boot/:controller/:action',
             'definitions' => [
                 'controller' => 1,
                 'action'     => 2,
@@ -76,7 +76,7 @@ class ApplicationTest extends TestCase
         ]);
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/static/route';
+        $_SERVER['REQUEST_URI']    = '/test-boot/static/route';
 
         $appMock         = m::mock(PhalconApp::class);
         $appMock->router = $router;
