@@ -10,6 +10,7 @@ namespace PhalexTest\Config;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Config\Config;
+use Phalex\Config\Cache\CacheInterface;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -39,6 +40,53 @@ class ConfigTest extends TestCase
                 ->getConfig();
         $this->assertInternalType('array', $resultConfig);
         $this->assertEquals($expected, $resultConfig);
+    }
+    
+    public function testGetConfigWithCacheHasData()
+    {
+        $expected      = require './tests/config/config.result.php';
+        $configApp     = require './tests/module/Application/config/module.config.php';
+        $configBe      = require './tests/module/Backend/config/module.config.php';
+        
+        $cacheMock = $this->getMock(CacheInterface::class);
+        $cacheMock->expects($this->once())
+                ->method('getConfig')
+                ->will($this->returnValue($expected));
+        
+        $cacheMock->expects($this->never())
+                ->method('setConfig');
+        
+        $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        $globPaths     = [
+            './tests/config/{,*.}{global}.php',
+            './tests/config/local.php'
+        ];
+
+        (new Config($modulesConfig, $globPaths, $cacheMock))
+                ->getConfig();
+    }
+    
+    public function testGetConfigWithCacheNotData()
+    {
+        $configApp     = require './tests/module/Application/config/module.config.php';
+        $configBe      = require './tests/module/Backend/config/module.config.php';
+        
+        $cacheMock = $this->getMock(CacheInterface::class);
+        $cacheMock->expects($this->once())
+                ->method('getConfig')
+                ->will($this->returnValue(false));
+        
+        $cacheMock->expects($this->once())
+                ->method('setConfig');
+        
+        $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        $globPaths     = [
+            './tests/config/{,*.}{global}.php',
+            './tests/config/local.php'
+        ];
+
+        (new Config($modulesConfig, $globPaths, $cacheMock))
+                ->getConfig();
     }
 
     /**
