@@ -4,7 +4,7 @@ namespace PhalexTest\Mvc;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Mvc\Module;
-use Zend\Stdlib\ArrayUtils;
+use Phalex\Mvc\Module\Cache\CacheInterface;
 
 /**
  * Description of ModuleTest
@@ -48,6 +48,69 @@ class ModuleTest extends TestCase
         $this->assertEquals($expectedModulesConfig, $module->getModulesConfig());
         $this->assertEquals($expectedModulesAutoload, $module->getModulesAutoloadConfig());
     }
+    
+    public function testConstructSuccessWithCacheNotData()
+    {
+        $expectedRegisteredModules = require './tests/config/module_register.result.php';
+        $expectedModulesAutoload   = require './tests/config/autoload.result.php';
+        
+        $cacheMock = $this->getMock(CacheInterface::class);
+        $cacheMock->expects($this->once())
+                ->method('getRegisteredModules')
+                ->will($this->returnValue(false));
+        
+        $cacheMock->expects($this->once())
+                ->method('setRegisteredModules');
+        
+        $cacheMock->expects($this->once())
+                ->method('getAutoloadModulesConfig')
+                ->will($this->returnValue(false));
+        
+        $cacheMock->expects($this->once())
+                ->method('setAutoloadModulesConfig');
+
+        $moduleNames = ['Application', 'Backend'];
+
+        $module = new Module($moduleNames, ['./tests/module'], $cacheMock);
+        foreach ($moduleNames as $moduleName) {
+            $this->assertTrue(class_exists("$moduleName\\Module"));
+        }
+        
+        $this->assertEquals($expectedRegisteredModules, $module->getRegisteredModules());
+        $this->assertEquals($expectedModulesAutoload, $module->getModulesAutoloadConfig());
+    }
+
+    public function testConstructSuccessWithCacheHasData()
+    {
+        $expectedRegisteredModules = require './tests/config/module_register.result.php';
+        $expectedModulesAutoload   = require './tests/config/autoload.result.php';
+        
+        $cacheMock = $this->getMock(CacheInterface::class);
+        $cacheMock->expects($this->once())
+                ->method('getRegisteredModules')
+                ->will($this->returnValue($expectedRegisteredModules));
+        
+        $cacheMock->expects($this->never())
+                ->method('setRegisteredModules');
+        
+        $cacheMock->expects($this->once())
+                ->method('getAutoloadModulesConfig')
+                ->will($this->returnValue($expectedModulesAutoload));
+        
+        $cacheMock->expects($this->never())
+                ->method('setAutoloadModulesConfig');
+
+        $moduleNames = ['Application', 'Backend'];
+
+        $module = new Module($moduleNames, ['./tests/module'], $cacheMock);
+        foreach ($moduleNames as $moduleName) {
+            $this->assertTrue(class_exists("$moduleName\\Module"));
+        }
+
+
+        $this->assertEquals($expectedRegisteredModules, $module->getRegisteredModules());
+        $this->assertEquals($expectedModulesAutoload, $module->getModulesAutoloadConfig());
+    }
 
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
@@ -70,7 +133,7 @@ class ModuleTest extends TestCase
         $moduleMock  = new Module($moduleNames, ['./tests/module']);
         $moduleMock->getModulesAutoloadConfig();
     }
-    
+
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
      * @expectedExceptionMessage The autoloader configuration for module "WrongModuleConfig" is invalid
@@ -81,7 +144,7 @@ class ModuleTest extends TestCase
         $moduleMock  = new Module($moduleNames, ['./tests/module']);
         $moduleMock->getModulesAutoloadConfig();
     }
-    
+
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
      * @expectedExceptionMessage The configuration for module "WrongModuleConfig" is invalid
@@ -92,7 +155,7 @@ class ModuleTest extends TestCase
         $moduleMock  = new Module($moduleNames, ['./tests/module']);
         $moduleMock->getModulesConfig();
     }
-    
+
     /**
      * @expectedException \Phalex\Mvc\Exception\RuntimeException
      * @expectedExceptionMessage The view path for module "WrongModuleViewPath" is invalid

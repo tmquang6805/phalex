@@ -184,7 +184,9 @@ class Module
     {
         $isCacheInstance = $this->cache instanceof CacheInterface;
         if ($isCacheInstance) {
-            return $this->cache->getAutoloadModulesConfig();
+            if (($autoloadConfig = $this->cache->getAutoloadModulesConfig()) !== false) {
+                return $autoloadConfig;
+            }
         }
         
         $autoloadConfig = $this->getModulesAutoloadConfigWithoutCache();
