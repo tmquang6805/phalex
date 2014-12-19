@@ -91,20 +91,4 @@ class Dispatch
     {
         $this->pickView($dispatcher);
     }
-
-//    public function afterExecuteRoute(Event $event, Dispatcher $dispatcher)
-//    {
-//    }
-//
-//    public function beforeNotFoundAction()
-//    {
-//    }
-//
-//    public function beforeException()
-//    {
-//    }
-//
-//    public function afterDispatchLoop()
-//    {
-//    }
 }

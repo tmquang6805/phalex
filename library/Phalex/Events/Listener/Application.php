@@ -40,14 +40,4 @@ class Application
         ];
         $di->set('view', new View($options), true);
     }
-
-//    public function afterStartModule(Event $event, PhalconApp $app, $moduleName)
-//    {
-//    }
-//    public function beforeHandleRequest()
-//    {
-//    }
-//    public function afterHandleRequest()
-//    {
-//    }
 }

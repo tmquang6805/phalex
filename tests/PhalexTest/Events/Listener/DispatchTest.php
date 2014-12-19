@@ -11,7 +11,10 @@ namespace PhalexTest\Events\Listener;
 use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Events\Listener\Dispatch;
 use Phalex\Mvc\Dispatcher;
+use Phalex\Mvc\View;
 use Phalcon\Events\Event;
+use Phalcon\Mvc\Controller;
+use Mockery as m;
 
 /**
  * Description of DispatchTest
@@ -71,6 +74,22 @@ class DispatchTest extends TestCase
 
     public function testBeforeExecuteRoute()
     {
-        $this->markTestIncomplete();
+        $eventMock      = m::mock(Event::class);
+        $dispatcherMock = m::mock(Dispatcher::class);
+        $controllerMock = m::mock(Controller::class);
+        $viewMock = $this->getMockBuilder(View::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        
+        $viewMock->expects($this->once())
+                ->method('pick');
+        
+        $controllerMock->view = $viewMock;
+        
+        $dispatcherMock->shouldReceive('getActiveController')->andReturn($controllerMock);
+        $dispatcherMock->shouldReceive('getControllerName')->andReturn('index');
+        $dispatcherMock->shouldReceive('getActionName')->andReturn('productDetail');
+        
+        (new Dispatch())->beforeExecuteRoute($eventMock, $dispatcherMock);
     }
 }
