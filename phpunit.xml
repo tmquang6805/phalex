@@ -2,16 +2,16 @@
 
 <!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
-        backupGlobals               = "false"
-        backupStaticAttributes      = "false"
-        colors                      = "true"
-        convertErrorsToExceptions   = "true"
-        convertNoticesToExceptions  = "true"
-        convertWarningsToExceptions = "true"
-        processIsolation            = "false"
-        stopOnFailure               = "false"
-        syntaxCheck                 = "false"
-        bootstrap                   = "./tests/Bootstrap.php">
+    backupGlobals               = "false"
+    backupStaticAttributes      = "false"
+    colors                      = "true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "true"
+    convertWarningsToExceptions = "true"
+    processIsolation            = "false"
+    stopOnFailure               = "false"
+    syntaxCheck                 = "false"
+    bootstrap                   = "./tests/Bootstrap.php">
 
     <testsuites>
         <testsuite name="phalcon_extension_library">
@@ -21,6 +21,10 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./library/Phalex</directory>
+            <exclude>
+                <directory suffix="Interface.php">./library/Phalex</directory>
+                <directory suffix="Exception.php">./library/Phalex</directory>
+            </exclude>
         </whitelist>
     </filter>
     <logging>
