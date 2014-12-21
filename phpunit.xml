@@ -24,6 +24,7 @@
             <exclude>
                 <directory suffix="Interface.php">./library/Phalex</directory>
                 <directory suffix="Exception.php">./library/Phalex</directory>
+                <file>./library/Phalex/Mvc/Application.php</file>
             </exclude>
         </whitelist>
     </filter>
