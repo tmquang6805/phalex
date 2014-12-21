@@ -5,6 +5,13 @@ use Phalcon\Db\Adapter\Pdo\Mysql;
 $cwd = getcwd();
 
 return [
+    'error_handler' => [
+        'options' => [
+            'views_dir' => $cwd . '/tests/module/Application/config/../view/error',
+            'template_500' => 'error.phtml',
+            'template_404' => 'not-found.phtml'
+        ],
+    ],
     'router' => [
         'home'                 => [
             'route'       => '/',

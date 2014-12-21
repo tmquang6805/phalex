@@ -3,6 +3,13 @@
 $dir = getcwd();
 
 return array(
+    'error_handler' => [
+        'options' => [
+            'views_dir' => $dir . '/tests/module/Application/config/../view/error',
+            'template_500' => 'error.phtml',
+            'template_404' => 'not-found.phtml'
+        ],
+    ],
     'view'   => array(
         'Application' => $dir . '/tests/module/Application/view',
         'Backend'     => $dir . '/tests/module/Backend/view',

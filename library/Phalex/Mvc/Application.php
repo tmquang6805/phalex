@@ -15,12 +15,6 @@ use Phalex\Events\Listener;
 class Application
 {
     /**
-     * @todo Use later
-     * @var EventsManager
-     */
-    protected $eventsManager;
-
-    /**
      *
      * @var Di\DiManager
      */

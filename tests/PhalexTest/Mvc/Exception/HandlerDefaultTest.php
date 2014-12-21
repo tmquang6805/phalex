@@ -92,7 +92,6 @@ class HandlerDefaultTest extends TestCase
     }
 
     /**
-     * @group dev
      * @return type
      */
     public function testCreateServiceSuccess()

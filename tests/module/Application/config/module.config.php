@@ -6,6 +6,13 @@ return [
     'view'   => [
         __NAMESPACE__ => __DIR__ . '/../view/'
     ],
+    'error_handler' => [
+        'options' => [
+            'views_dir' => __DIR__ . '/../view/error',
+            'template_500' => 'error.phtml',
+            'template_404' => 'not-found.phtml'
+        ],
+    ],
     'router' => [
         'home' => [
             'route'   => '/',
