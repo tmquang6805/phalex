@@ -9,6 +9,7 @@
 namespace Phalex\Di;
 
 use Phalex\Mvc\Router;
+use Phalex\Mvc\Exception\HandlerDefault;
 use Phalcon\Config;
 
 /**
@@ -119,7 +120,7 @@ class DiManager
             if ($isCallable) {
                 return $serviceConfig($this->diFactory);
             }
-
+            
             $obj = new $serviceConfig();
             if (!$obj instanceof DiFactoryInterface) {
                 $msg = sprintf('Class "%s" must be implemented "%s"', $serviceConfig, DiFactoryInterface::class);
@@ -155,5 +156,21 @@ class DiManager
         }
 
         return $this;
+    }
+
+    /**
+     * Create DI error handler
+     * @throws Exception\RuntimeException
+     */
+    public function createErrorHandler()
+    {
+        $config = $this->getConfig();
+        if (!isset($config['error_handler'])) {
+            throw new Exception\RuntimeException('Not found error handler config');
+        }
+        
+        $errorHandlerConfig = $config['error_handler']->toArray();
+        $adapter = !isset($errorHandlerConfig['adapter']) ? HandlerDefault::class : $errorHandlerConfig['adapter'];
+        $this->setServiceFactories('errorHandler', $adapter, false);
     }
 }

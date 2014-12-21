@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: quangtm
- * Date: 17/11/2014
- * Time: 00:44
- */
-
 namespace Phalex\Mvc;
 
 use Phalcon\Events\Manager as EventsManager;
@@ -42,6 +35,21 @@ class Application
 
         $this->diManager = new Di\DiManager($diFactory);
         $diFactory->set('moduleHandler', $moduleHandler, true);
+
+        // Create error handler early for handling exception
+        $this->setErrorHanlder();
+    }
+
+    private function setErrorHanlder()
+    {
+        $this->diManager->createErrorHandler();
+        $errorHandler = $this->diManager->getDi()->get('errorHandler');
+        if (!$errorHandler instanceof Exception\HandlerInterface) {
+            throw new \RuntimeException(sprintf('%s is invalid', get_class($errorHandler)));
+        }
+
+        set_error_handler([$errorHandler, 'errorHandler']);
+        set_exception_handler([$errorHandler, 'exceptionHandler']);
     }
 
     /**
@@ -104,31 +112,27 @@ class Application
 
     public function run()
     {
-        try {
-            $diFactory     = $this->diManager->getDi();
-            $moduleHandler = $diFactory->get('moduleHandler');
+        $diFactory     = $this->diManager->getDi();
+        $moduleHandler = $diFactory->get('moduleHandler');
 
-            // Register autoloader
-            (new Autoloader($diFactory))->register();
+        // Register autoloader
+        (new Autoloader($diFactory))->register();
 
-            // Register services and routers
-            $this->diManager->initInvokableServices()
-                    ->initFactoriedServices()
-                    ->initRouterDi();
+        // Register services and routers
+        $this->diManager->initInvokableServices()
+                ->initFactoriedServices()
+                ->initRouterDi();
 
-            // Init listeners
-            (new Listener($diFactory))
-                    ->listenApplicationEvents(new Listener\Application())
-                    ->listenDispatchEvents(new Listener\Dispatch());
+        // Init listeners
+        (new Listener($diFactory))
+                ->listenApplicationEvents(new Listener\Application())
+                ->listenDispatchEvents(new Listener\Dispatch());
 
-            // Register modules
-            $application = new PhalconApplication($diFactory);
-            $application->setEventsManager($diFactory['eventsManager']);
-            $application->registerModules($moduleHandler->getRegisteredModules());
+        // Register modules
+        $application = new PhalconApplication($diFactory);
+        $application->setEventsManager($diFactory['eventsManager']);
+        $application->registerModules($moduleHandler->getRegisteredModules());
 
-            $application->handle()->send();
-        } catch (\Exception $exc) {
-            echo $exc->getMessage();
-        }
+        $application->handle()->send();
     }
 }
