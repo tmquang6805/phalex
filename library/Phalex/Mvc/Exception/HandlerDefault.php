@@ -89,6 +89,13 @@ class HandlerDefault implements HandlerInterface
         $this->response->setDI($di);
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @param type $errorCode
+     * @param type $errorMessage
+     * @param type $errorFile
+     * @param type $errorLine
+     */
     public function errorHandler($errorCode, $errorMessage, $errorFile, $errorLine)
     {
         $errMsg = sprintf('Error occurs in Phalex Application. "%s"', $errorMessage);
@@ -97,6 +104,10 @@ class HandlerDefault implements HandlerInterface
         $this->exceptionHandler($exc);
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @param \Exception $exception
+     */
     public function exceptionHandler(\Exception $exception)
     {
         $this->view->setVars([
