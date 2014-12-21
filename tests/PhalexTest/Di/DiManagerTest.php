@@ -511,7 +511,7 @@ class DiManagerTest extends TestCase
         $this->assertInstanceOf(DateObject::class, $obj2);
         $this->assertEquals($equal, $obj1->time === $obj2->time);
     }
-    
+
     /**
      * @group service_invokables
      * @group service_factories
@@ -531,5 +531,46 @@ class DiManagerTest extends TestCase
         $di     = new DiManager($diMock);
         $di->initInvokableServices();
         $di->initFactoriedServices();
+    }
+
+    /**
+     * @expectedException Phalex\Di\Exception\RuntimeException
+     * @expectedExceptionMessage Not found error handler config
+     */
+    public function testCreateErrorHandlerRaiseException()
+    {
+        $diMock = $this->getMockBuilder(Di::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config([])));
+        $di     = new DiManager($diMock);
+        $di->createErrorHandler();
+    }
+
+    public function testCreateErrorHandlerSuccess()
+    {
+        $config = [
+            'error_handler' => [
+                'options' => [
+                    'views_dir'    => __DIR__ . '/../view/error',
+                    'template_500' => 'error.phtml',
+                    'template_404' => 'not-found.phtml'
+                ],
+            ]
+        ];
+        $diMock = $this->getMockBuilder(Di::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $diMock->expects($this->once())
+                ->method('get')
+                ->with('config')
+                ->will($this->returnValue(new Config($config)));
+        $diMock->expects($this->once())
+                ->method('set');
+        $di     = new DiManager($diMock);
+        $di->createErrorHandler();
     }
 }
