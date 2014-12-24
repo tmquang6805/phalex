@@ -24,9 +24,9 @@ class Application
         $moduleHandler = new Module($config['modules'], $config['autoload_module_paths'], $cacheModule);
         $entireAppConf = (new ConfigHandler($moduleHandler, $config['config_glob_paths'], $cacheConfig))->getConfig();
         $diFactory     = new Di\Di($entireAppConf);
-        $this->diManager = new Di\DiManager($diFactory);
         $diFactory->set('moduleHandler', $moduleHandler, true);
 
+        $this->diManager = new Di\DiManager($diFactory);
         // Create error handler early for handling exception
         $this->setErrorHanlder();
     }
