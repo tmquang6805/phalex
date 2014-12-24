@@ -127,7 +127,6 @@ class HandlerDefault implements HandlerInterface
             $statusCode = 404;
             $message    = 'Not Found';
         }
-        $template = substr($template, 0, strrpos($template, '.'));
 
         $content = $this->view->render($template);
         $this->response->setContent($content)
