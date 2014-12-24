@@ -30,6 +30,5 @@
     </filter>
     <logging>
         <log type="coverage-html" target="./code-coverage" charset="UTF-8" highlight="false" lowUpperBound="40" highLowerBound="80" />
-        <!--<log type="coverage-text" target="php://stdout" title="Hung Qua" charset="UTF-8" yui="true" highlight="true" lowUpperBound="40" highLowerBound="80"/>-->
     </logging>
 </phpunit>
