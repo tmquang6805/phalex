@@ -3,14 +3,15 @@
 namespace Phalex\Config;
 
 use Zend\Stdlib\ArrayUtils;
+use Phalex\Mvc\Module;
 
 class Config
 {
     /**
      *
-     * @var array
+     * @var Module
      */
-    protected $modulesConfig;
+    protected $moduleHandler;
 
     /**
      *
@@ -26,13 +27,13 @@ class Config
 
     /**
      *
-     * @param array $modulesConfig
+     * @param Module $moduleHandler
      * @param string|array $globPaths
      * @param \Phalex\Config\Cache\CacheInterface $cache
      */
-    public function __construct(array $modulesConfig, $globPaths, Cache\CacheInterface $cache = null)
+    public function __construct(Module $moduleHandler, $globPaths, Cache\CacheInterface $cache = null)
     {
-        $this->modulesConfig = $modulesConfig;
+        $this->moduleHandler = $moduleHandler;
         $this->cache         = $cache;
 
         $this->files = [];
@@ -58,7 +59,7 @@ class Config
             return $configs;
         }
 
-        $configs = $this->modulesConfig;
+        $configs = $this->moduleHandler->getModulesConfig();
         foreach ($this->files as $file) {
             $config = require $file;
             if (!is_array($config)) {
@@ -66,7 +67,7 @@ class Config
             }
             $configs = ArrayUtils::merge($configs, require $file);
         }
-        
+
         return $this->cleanUp($configs);
     }
 

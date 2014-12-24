@@ -12,6 +12,8 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Phalex\Config\Config;
 use Phalex\Config\Cache\CacheInterface;
 use Zend\Stdlib\ArrayUtils;
+use Phalex\Mvc\Module;
+use Mockery as m;
 
 /**
  * Description of ConfigTest
@@ -26,17 +28,21 @@ class ConfigTest extends TestCase
         $configApp     = require './tests/module/Application/config/module.config.php';
         $configBe      = require './tests/module/Backend/config/module.config.php';
         $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
+        
         $globPaths     = [
             './tests/config/{,*.}{global}.php',
             './tests/config/local.php'
         ];
 
-        $resultConfig = (new Config($modulesConfig, $globPaths))
+        $resultConfig = (new Config($moduleHandler, $globPaths))
                 ->getConfig();
         $this->assertInternalType('array', $resultConfig);
         $this->assertEquals($expected, $resultConfig);
 
-        $resultConfig = (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+        $resultConfig = (new Config($moduleHandler, './tests/config/{,*.}{global,local}.php'))
                 ->getConfig();
         $this->assertInternalType('array', $resultConfig);
         $this->assertEquals($expected, $resultConfig);
@@ -57,12 +63,14 @@ class ConfigTest extends TestCase
                 ->method('setConfig');
         
         $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
         $globPaths     = [
             './tests/config/{,*.}{global}.php',
             './tests/config/local.php'
         ];
 
-        (new Config($modulesConfig, $globPaths, $cacheMock))
+        (new Config($moduleHandler, $globPaths, $cacheMock))
                 ->getConfig();
     }
     
@@ -80,12 +88,14 @@ class ConfigTest extends TestCase
                 ->method('setConfig');
         
         $modulesConfig = ArrayUtils::merge($configApp, $configBe);
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
         $globPaths     = [
             './tests/config/{,*.}{global}.php',
             './tests/config/local.php'
         ];
 
-        (new Config($modulesConfig, $globPaths, $cacheMock))
+        (new Config($moduleHandler, $globPaths, $cacheMock))
                 ->getConfig();
     }
 
@@ -98,7 +108,9 @@ class ConfigTest extends TestCase
         $configApp     = require './tests/module/Application/config/module.config.php';
         $configBe      = require './tests/module/Backend/config/module.config.php';
         $modulesConfig = ArrayUtils::merge($configApp, $configBe);
-        (new Config($modulesConfig, './tests/config/wrong_config_autoload.php'))
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
+        (new Config($moduleHandler, './tests/config/wrong_config_autoload.php'))
                 ->getConfig();
     }
 
@@ -109,7 +121,9 @@ class ConfigTest extends TestCase
     public function testGetConfigRaiseExceptionViewPath()
     {
         $modulesConfig = require './tests/config/wrong_config_autoload_view_path.php';
-        (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
+        (new Config($moduleHandler, './tests/config/{,*.}{global,local}.php'))
                 ->getConfig();
     }
     
@@ -120,7 +134,9 @@ class ConfigTest extends TestCase
     public function testGetConfigRaiseExceptionViewPathNotExisted()
     {
         $modulesConfig = require './tests/config/wrong_config_autoload_view_path_not_exist.php';
-        (new Config($modulesConfig, './tests/config/{,*.}{global,local}.php'))
+        $moduleHandler = m::mock(Module::class);
+        $moduleHandler->shouldReceive('getModulesConfig')->andReturn($modulesConfig);
+        (new Config($moduleHandler, './tests/config/{,*.}{global,local}.php'))
                 ->getConfig();
     }
 }
