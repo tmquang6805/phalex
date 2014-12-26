@@ -2,5 +2,5 @@
 /vendor/*
 /composer.lock
 /code-coverage/
-/docs/
+/.couscous/*
 /tests/data/

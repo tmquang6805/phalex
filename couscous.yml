@@ -1,0 +1,26 @@
+template:
+    directory: website
+
+baseUrl: http://127.0.0.1:8000
+
+exclude:
+    - vendor
+    - bin
+    - tests
+    - code-coverage
+    - library
+
+title: Phalex
+subTitle: Library build on top PhalconPHP Framwork.
+
+menu:
+    items:
+        home:
+            text: Home
+            relativeUrl:
+        Module:
+            text: Module
+            relativeUrl: docs/module.html
+        Routing:
+            text: Routing
+            relativeUrl: docs/routing.html
