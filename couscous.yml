@@ -21,6 +21,9 @@ menu:
         Module:
             text: Module
             relativeUrl: docs/module.html
+        ErrorHandler:
+            text: Error Handler
+            relativeUrl: docs/error_handler.html
         Routing:
             text: Routing
             relativeUrl: docs/routing.html
