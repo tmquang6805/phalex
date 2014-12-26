@@ -24,3 +24,6 @@ menu:
         Routing:
             text: Routing
             relativeUrl: docs/routing.html
+        View:
+            text: View
+            relativeUrl: docs/view.html

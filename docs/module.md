@@ -36,7 +36,7 @@ class Module extends AbstractModule
 
 ### Method getConfig()
 
-This configuration, you can config about [view](), [service_manager](), [router](), and more... Example:
+This configuration, you can config about [view](view.md), [service_manager](), [router](routing.md), and more... Example:
 
 ```php
 public function getConfig()
