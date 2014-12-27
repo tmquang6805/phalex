@@ -21,6 +21,9 @@ menu:
         Module:
             text: Module
             relativeUrl: docs/module.html
+        ServiceManager:
+            text: Service Manager
+            relativeUrl: docs/service_manager.html
         ErrorHandler:
             text: Error Handler
             relativeUrl: docs/error_handler.html
