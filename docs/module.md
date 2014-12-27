@@ -36,7 +36,7 @@ class Module extends AbstractModule
 
 ### Method getConfig()
 
-This configuration, you can config about [view](view.md), [service_manager](), [router](routing.md), and more... Example:
+This configuration, you can config about [view](view.md), [service_manager](service_manager.md), [router](routing.md), and more... Example:
 
 ```php
 public function getConfig()
@@ -72,6 +72,11 @@ public function getConfig()
                     'params'     => 3
                 ],
             ],
+        ],
+        'db' => [
+            'dns' => 'mysql:host=localhost;dbname=test';
+            'username' => 'root',
+            'password' => '',
         ],
     ];
 }
