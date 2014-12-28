@@ -2,8 +2,6 @@ before_commands:
     - "composer update --prefer-source"
 
 tools:
-    external_code_coverage: 
-        enabled: true
     php_code_sniffer:
         enabled: true
         config:
