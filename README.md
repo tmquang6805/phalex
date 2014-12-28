@@ -19,7 +19,4 @@ Phalex bases on **Plug & Play Multi Modules** mechanism, so you can easy to deve
 
 - Require **PHP 5.5** or later. (We recommend using latest PHP version whenever possible)
 - [Phalcon Framework 1.3](http://phalconphp.com/en/) or later (I don't test with Phalcon Framework 2.0, so I don't recommend use version 2.0 with Phalex)
- 
-## How to build website with Phalex
 
-Please check with [Wiki](https://github.com/tmquang6805/phalex/wiki)
