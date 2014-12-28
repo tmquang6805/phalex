@@ -1,5 +1,9 @@
 # Welcome To Phalex
 
+[![Build Status](https://travis-ci.org/tmquang6805/phalex.svg?branch=master)](https://travis-ci.org/tmquang6805/phalex)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tmquang6805/phalex/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tmquang6805/phalex/build-status/master)
+
 ## Introduction
 
 The name **Phalex** is a contraction of the words [Phal]con [Ex]tension.  
