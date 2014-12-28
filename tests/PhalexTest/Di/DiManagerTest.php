@@ -31,9 +31,7 @@ class DiManagerTest extends TestCase
      */
     public function testInitRouterDiRaiseExeptionRouterConfig()
     {
-        $mockDi = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $mockDi = $this->getMock(Di::class, ['get'], [[]]);
         $mockDi->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -59,9 +57,9 @@ class DiManagerTest extends TestCase
                 ],
             ]
         ];
-        $mockDi = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        
+        $mockDi = $this->getMock(Di::class, ['get', 'set'], [$config]);
+        
         $mockDi->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -134,9 +132,7 @@ class DiManagerTest extends TestCase
                 ]
             ],
         ];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get', 'set'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -161,9 +157,7 @@ class DiManagerTest extends TestCase
                 ]
             ],
         ];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get', 'set'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -180,9 +174,7 @@ class DiManagerTest extends TestCase
         $config = [
             'service_manager' => [],
         ];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get', 'set'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -290,9 +282,7 @@ class DiManagerTest extends TestCase
      */
     public function testInitFactoriedServices($config)
     {
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['set', 'get'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -344,9 +334,7 @@ class DiManagerTest extends TestCase
      */
     public function testInitFactoriesServicesRaiseException($config)
     {
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['set', 'get'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -418,9 +406,7 @@ class DiManagerTest extends TestCase
         $config = [
             'service_manager' => [],
         ];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->setConstructorArgs($config)
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['set', 'get'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -519,9 +505,7 @@ class DiManagerTest extends TestCase
     public function testInitServicesWithoutConfig()
     {
         $config = [];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -539,9 +523,7 @@ class DiManagerTest extends TestCase
      */
     public function testCreateErrorHandlerRaiseException()
     {
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -561,9 +543,7 @@ class DiManagerTest extends TestCase
                 ],
             ]
         ];
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get', 'set'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')

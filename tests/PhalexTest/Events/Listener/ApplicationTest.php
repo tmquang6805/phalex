@@ -99,9 +99,7 @@ class ApplicationTest extends TestCase
      */
     public function testBeforeStartModuleMock()
     {
-        $mockDi = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $mockDi = $this->getMock(Di::class, ['set', 'get'], [[]]);
         $mockDi->expects($this->once())
                 ->method('get')
                 ->with('config')

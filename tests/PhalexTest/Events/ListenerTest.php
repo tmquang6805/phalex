@@ -40,9 +40,7 @@ class ListenerTest extends TestCase
     {
         $this->em = new EM();
         
-        $di = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $di = $this->getMock(Di::class, ['get'], [[]]);
         $di->expects($this->once())
                 ->method('get')
                 ->will($this->returnValue($this->em));

@@ -81,9 +81,7 @@ class HandlerDefaultTest extends TestCase
      */
     public function testCreateServiceRaiseException($config)
     {
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')
@@ -105,9 +103,7 @@ class HandlerDefaultTest extends TestCase
                 ],
             ],
         ];
-        $diMock  = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock  = $this->getMock(Di::class, ['get'], [$config]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('config')

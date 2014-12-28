@@ -22,9 +22,7 @@ class ViewTest extends TestCase
 {
     public function supplyTestConstructorRaiseException()
     {
-        $di = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $di = $this->getMock(Di::class, ['get', 'set'], [[]]);
         return [
             [
                 []
@@ -55,9 +53,7 @@ class ViewTest extends TestCase
 
     public function testConstructorDefault()
     {
-        $di = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $di = $this->getMock(Di::class, ['get'], [[]]);
 
         $view    = new View([
             'di'        => $di,
@@ -72,9 +68,7 @@ class ViewTest extends TestCase
 
     public function testConstructorSetEngines()
     {
-        $di = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $di = $this->getMock(Di::class, ['get'], [[]]);
         
         $options = [
             'di'        => $di,

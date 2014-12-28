@@ -31,9 +31,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
                 ->method('getModulesAutoloadConfig')
                 ->will($this->returnValue(require './tests/config/autoload.result.php'));
 
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('moduleHandler')
@@ -118,9 +116,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
                 ->method('getModulesAutoloadConfig')
                 ->will($this->returnValue(['namespaces' => $namespaces]));
 
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('moduleHandler')
@@ -143,9 +139,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
                 ->method('getModulesAutoloadConfig')
                 ->will($this->returnValue(['classmap' => [getcwd() . '/tests/config/wrong_classmap.php']]));
 
-        $diMock = $this->getMockBuilder(Di::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $diMock = $this->getMock(Di::class, ['get'], [[]]);
         $diMock->expects($this->once())
                 ->method('get')
                 ->with('moduleHandler')
