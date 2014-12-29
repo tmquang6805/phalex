@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Routing</h1>
+<p>Routing configuration help you config routers component. Router component allows defining routes that are mapped to controllers or handlers that should receive the request. Routing in <a href=""Phalex"">Phalex</a> simple is <strong>PHP Array</strong>, you can set it in <code>module.config.php</code> file (for each module) or in <code>global/local</code> configuration (specify in <code>application.config.php</code>)</p>
+<h2>Defining Routes</h2>
+<p>Define routes in <code>module.config.php</code> file (for each module) or in <code>global/local</code> configuration (specify in <code>application.config.php</code>). Defining route is defined in value of <strong>router</strong> key</p>
+<pre><code class="language-php">// module.config.php
+&lt;?php
+return [
+    // Other configurations
+    'router' =&gt; [
+        /* Difining routes here */
+    ]
+    // Other configurations
+];</code></pre>
+<blockquote>
+<p><strong>Note:</strong> All example defining routes in this page will be written in <code>/* Difining routes here */</code> comment above</p>
+</blockquote>
+<h3>Example 1</h3>
+<pre><code class="language-php">'about' =&gt; [
+    'route' =&gt; '/about-me',
+    'definitions' =&gt; [
+        'controller' =&gt; 'introduce',
+        'action' =&gt; 'about-me'
+    ],
+],</code></pre>
+<p>In this case, if the URI is exactly: <strong>/about-me</strong>, then the <code>introduce</code> controller and its action <code>aboutMe</code> will be executed. The key <code>about</code> will be the route's name </p>
+<p>An application can have many paths, defines routes one by one can be a cumbersome task. In these case we can create more flexible routes.</p>
+<h3>Example 2</h3>
+<pre><code class="language-php">'admin' =&gt; [
+    'route' =&gt; '/admin/:controller/:action/:params',
+    'definitions' =&gt; [
+        'controller' =&gt; 1,
+        'action' =&gt; 2,
+        'params' =&gt; 3
+    ],
+],</code></pre>
+<p>In the <em>example 2</em>, using wildcards we make a route valid for many URIs. For example, by accessing the following URI <strong>/admin/users/search/dave/micheal</strong> then</p>
+<table>
+<thead>
+<tr>
+<th>Route Key</th>
+<th>Route Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller</td>
+<td>users</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>search</td>
+</tr>
+<tr>
+<td>Parameter</td>
+<td>dave</td>
+</tr>
+<tr>
+<td>Parameter</td>
+<td>micheal</td>
+</tr>
+</tbody>
+</table>
+<p>In the <em>example 2</em>, matching parts are placeholders or subpatterns delimited by parentheses (round brackets). In this case, the first subpattern matched (:controller) is the controller part of the route, the second the action and so on.</p>
+<p>These placeholders help writing regular expressions that are more readable for developers and easier to understand. The following placeholders are supported </p>
+<table>
+<thead>
+<tr>
+<th align="left">Placeholder</th>
+<th align="left">Regular Expression</th>
+<th align="left">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">/:module</td>
+<td align="left">/([a-zA-Z0-9_-]+)</td>
+<td align="left">Matches a valid <strong>module name</strong> with alpha-numeric charaters only</td>
+</tr>
+<tr>
+<td align="left">/:controller</td>
+<td align="left">/([a-zA-Z0-9_-]+)</td>
+<td align="left">Matches a valid <strong>controller name</strong> with alpha-numeric characters only</td>
+</tr>
+<tr>
+<td align="left">/:action</td>
+<td align="left">/([a-zA-Z0-9_]+)</td>
+<td align="left">Matches a valid <strong>action name</strong> with alpha-numeric characters only</td>
+</tr>
+<tr>
+<td align="left">/:params</td>
+<td align="left">(/.<em>)</em></td>
+<td align="left">Matches a list of optional <strong>words separated by slashes</strong>. Use only this placeholder at the end of a route</td>
+</tr>
+<tr>
+<td align="left">/:namespace</td>
+<td align="left">/([a-zA-Z0-9_-]+)</td>
+<td align="left">Matches a <strong>single level namespace name</strong></td>
+</tr>
+<tr>
+<td align="left">/:int</td>
+<td align="left">/([0-9]+)</td>
+<td align="left">Matches an <strong>integer parameter</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Module, Controller, Action</strong> names are camelized, this means that characters (-) and (_) are removed and the next character is uppercased</p>
+</blockquote>
+<h2>Parameter with names</h2>
+<p>The example below demonstrates how to define names to route parameters</p>
+<h3>Example 3</h3>
+<pre><code class="language-php">'admin' =&gt; [
+    'route' =&gt; '/admin/:controller/:action/([a-z0-9-]+)/([1-9][0-9]*)/:params',
+    'definitions' =&gt; [
+        'controller' =&gt; 1, // :controller
+        'action' =&gt; 2, // :action
+        'title' =&gt; 3, // ([a-z0-9-]+)
+        'id' =&gt; 4, // ([1-9][0-9]*)
+        'params' =&gt; 5 // :params
+    ],
+],</code></pre>
+<h2>Http method restriction</h2>
+<p>Sometimes we can restrict a route to specific method, this is especially useful when creating RESTful applications:</p>
+<h3>Example 4</h3>
+<pre><code class="language-php">'api-add-prod' =&gt; [
+    'route' =&gt; '/api/product',
+    'methods' =&gt; ['post'],
+    'definitions' =&gt; [
+        'controller' =&gt; 'production',
+        'action' =&gt; 'add'
+    ],
+],</code></pre>
+<p>In the <em>example 4</em>, this route only will <strong>be matched</strong> if the HTTP method is <code>POST</code></p>
+<p>You can specify many method in the array</p>
+<h3>Example 5</h3>
+<pre><code class="language-php">'api-add-prod' =&gt; [
+    'route' =&gt; '/api/product/([1-9][0-9]*)',
+    'methods' =&gt; ['get', 'put'],
+    'definitions' =&gt; [
+        'controller' =&gt; 'production',
+        'action' =&gt; 'get-or-edit',
+        'id' =&gt; 1,
+    ],
+],</code></pre>
+<h2>Using convertions</h2>
+<p>Convertions allow to freely transform the route's parameters before passing them to the dispatcher, the following example show how to use them:</p>
+<h3>Example 6</h3>
+<pre><code class="language-php">'news' =&gt; [
+    'route' =&gt; '/news/([a-zA-Z0-9-_]+)/([1-9][0-9]*)',
+    'definitions' =&gt; [
+        'controller' =&gt; 'news',
+        'action' =&gt; 'detail',
+        'title' =&gt; 1,
+        'id' =&gt; 2
+    ],
+    'convertions' =&gt; [
+        'title' =&gt; 'TitleConvertionClassName',
+    ],
+],</code></pre>
+<p>The <code>convertions</code> array is config for route convertion. The <code>key</code> is the parameter route's name, and the 'value' is the name of class implements <code>Phalex\Mvc\Router\ConvertingInterface</code></p>
+<h2>Match callback</h2>
+<p>Sometimes, routes must be matched if they meet specific conditions, you can add arbitrary conditions to routes using the <code>before_match</code> config. This config specify the class name to handle condition before match route. If them return <code>false</code>, the route will be treaded as <strong>non-matched</strong></p>
+<h3>Example 7</h3>
+<pre><code class="language-php">'news' =&gt; [
+    'route' =&gt; '/news/([a-zA-Z0-9-_]+)/([1-9][0-9]*)',
+    'definitions' =&gt; [
+        'controller' =&gt; 'news',
+        'action' =&gt; 'detail',
+        'title' =&gt; 1,
+        'id' =&gt; 2
+    ],
+    'before_match' =&gt; 'ConditionNewsHandlerClassName',
+],</code></pre>
+<p>The value of <code>before_match</code> is the class name that must be implemented <code>Phalex\Mvc\Router\BeforeMatchInterface</code></p>
+<h2>Host constraints</h2>
+<p>The router allow to set hostname constraints, this means that specific routes can be restricted to only match if the route also meets the hostname constraint:</p>
+<h3>Example 8</h3>
+<pre><code class="language-php">'api-add-prod' =&gt; [
+    'route' =&gt; '/api/product/([1-9][0-9]*)',
+    'methods' =&gt; ['get', 'put'],
+    'definitions' =&gt; [
+        'controller' =&gt; 'production',
+        'action' =&gt; 'get-or-edit',
+        'id' =&gt; 1,
+    ],
+    'host_name' =&gt; 'api.example.com',
+],</code></pre>
+<p>Hostname can also be <strong>regular expressions</strong></p>
+<h3>Example 8</h3>
+<pre><code class="language-php">'api-add-prod' =&gt; [
+    'route' =&gt; '/api/product/([1-9][0-9]*)',
+    'methods' =&gt; ['get', 'put'],
+    'definitions' =&gt; [
+        'controller' =&gt; 'production',
+        'action' =&gt; 'get-or-edit',
+        'id' =&gt; 1,
+    ],
+    'host_name' =&gt; '([a-z+]).example.com',
+],</code></pre>
+<h2>Dealing with extra/trailing slashes</h2>
+<p>In <a href=""Phalex"">Phalex</a>, the router remove the trailing slashes from the end</p>
+<h2>URI Sources</h2>
+<p>In <a href=""Phalex"">Phalex</a>, the <code>$_SERVER[‘REQUEST_URI’]</code> is default for URI source</p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

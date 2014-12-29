@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Installation</h1>
+<h2>Via Composer (Recommend)</h2>
+<p>The recommended way to start a new <strong>Phalex</strong> project is to clone the skeleton application and use <code>composer</code> to 
+install dependencies using the <code>create-project</code> command:</p>
+<pre><code>curl -s https://getcomposer.org/installer | php --
+php composer.phar create-project -sdev tmquang6805/phalex-skeleton path/to/install</code></pre>
+<p>Alternately, clone the repository and manually invoke <code>composer</code>:</p>
+<pre><code>cd my/project/dir
+git clone https://github.com/tmquang6805/phalex-skeleton.git
+cd phalex-skeleton
+curl -s https://getcomposer.org/installer | php --
+php composer.phar install</code></pre>
+<h2>Web Server setup</h2>
+<h3>PHP Cli Server</h3>
+<p>The simplist way to get started </p>
+<pre><code>php -S 127.0.0.1:8080 -t public/ public/index.php</code></pre>
+<h3>Apache Setup</h3>
+<p>To use Apache, setup a virtual host to point to the public/ directory of the project. It should look something like below:</p>
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName phalex.local
+    DocumentRoot /path/to/phalex/project/public
+
+    &lt;Directory /path/to/phalex/project/public&gt;
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+<p>Or, if you are using Apache 2.4 or above:</p>
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName phalex.local
+    DocumentRoot /path/to/phalex/project/public
+
+    &lt;Directory /path/to/phalex/project/public&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

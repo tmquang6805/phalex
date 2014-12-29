@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Error Handler</h1>
+<h2>Introduction</h2>
+<p>Phalex has default error handler, you only specify <code>views_dir</code>, templates for render error messages</p>
+<pre><code class="language-php">
+return [
+    'error_handler' =&gt; [
+        'options' =&gt; [
+            'views_dir' =&gt; __DIR__ . '/view/error',
+            'template_500' =&gt; 'error',
+            'template_404' =&gt; 'not-found'
+        ],
+    ],
+]</code></pre>
+<p>Default, <strong>error handler</strong> in Phalex is <code>Phalex\Mvc\Exception\HandlerDefault</code> class, it use <code>Phalcon\Mvc\View\Simple</code>
+for rendering error messages. The view in <code>HandlerDefault</code> is registered <strong>volt</strong> and <strong>phtml</strong> template engine, so you
+can easy to modify template, error messages.</p>
+<h2>Implementing your own Error Handler</h2>
+<ul>
+<li>First, the <code>Phalex\Mvc\Exception\HandlerInterface</code> interface must be implemented to create your own Error Handler 
+replacing the one provided by Phalex.</li>
+<li>Second, you must re-config <code>error_handler</code> above like that</li>
+</ul>
+<pre><code class="language-php">return [
+    'error_handler' =&gt; [
+        'adapter' =&gt; Your\Error\Handler::class // String of class name
+        'options' =&gt; [
+            /* Other options for your error handler */
+        ],
+    ],
+]
+</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

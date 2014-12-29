@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>View</h1>
+<h2>Config</h2>
+<p>In Phalex, service <code>view</code> will be set automatically, so you mustn't set <code>view DI</code> manually. Instead of, you just only set <strong>views_dir</strong> for each module. Check <a href="module.html">Module</a> for setting config. Example</p>
+<pre><code class="language-php">return [
+    'view'   =&gt; [
+        __NAMESPACE__ =&gt; __DIR__ . '/../view/'
+    ],
+];</code></pre>
+<ul>
+<li><code>__NAMESPACE__</code>: that means the name of <strong>module</strong></li>
+<li>In Phalex, <code>view service</code> will be register the <strong>volt</strong> and <strong>phtml</strong> engine by default. </li>
+</ul>
+<h2>Route - Controller - Action - Folder View name</h2>
+<p>If you config the router (check <a href="routing.html">Routing</a> for more detail about Router in Phalex)</p>
+<pre><code class="language-php">'admin' =&gt; [
+    'route' =&gt; '/admin/:controller/:action/([1-9][0-9]*)',
+    'definitions' =&gt; [
+        'controller' =&gt; 1,
+        'action' =&gt; 2,
+        'id' =&gt; 3
+    ],
+],</code></pre>
+<p>In the example, by accessing the following URI <code>/admin/shopping-cart/view-detail/10</code> then:</p>
+<table>
+<thead>
+<tr>
+<th>Route Key</th>
+<th>Route Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>controller</td>
+<td>shopping-cart</td>
+</tr>
+<tr>
+<td>action</td>
+<td>view-detail</td>
+</tr>
+</tbody>
+</table>
+<p>And you must have controller in file <code>ShoppingCartController.php</code></p>
+<pre><code class="language-php">
+&lt;?php
+
+namespace Admin\Controller;
+
+use Phalcon\Mvc\Controller as ControllerBase;
+
+class ShoppingCartController extends ControllerBase
+{
+    public function viewDetailAction()
+    {
+       /* Block code action here */
+    }
+}</code></pre>
+<p>And the <code>view service</code> when be rendered in <strong>{path/to/views/dir}/shopping-cart/view-detail.phtml</strong> (or <strong>{path/to/views/dir}/shopping-cart/view-detail.volt</strong> if you want to use <em>volt</em> template engine)</p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

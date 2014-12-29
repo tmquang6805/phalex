@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Welcome To Phalex</h1>
+<p><a href="https://travis-ci.org/tmquang6805/phalex"><img alt="Build Status" src="https://travis-ci.org/tmquang6805/phalex.svg?branch=master" /></a>
+<a href="https://scrutinizer-ci.com/g/tmquang6805/phalex/?branch=master"><img alt="Scrutinizer Code Quality" src="https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/quality-score.png?b=master" /></a>
+<a href="https://scrutinizer-ci.com/g/tmquang6805/phalex/build-status/master"><img alt="Build Status" src="https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/build.png?b=master" /></a>
+<a href="https://scrutinizer-ci.com/g/tmquang6805/phalex/?branch=master"><img alt="Code Coverage" src="https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/coverage.png?b=master" /></a>
+<a href="https://packagist.org/packages/tmquang6805/phalex"><img alt="Latest Stable Version" src="https://poser.pugx.org/tmquang6805/phalex/v/stable.svg" /></a>
+<a href="https://packagist.org/packages/tmquang6805/phalex"><img alt="Total Downloads" src="https://poser.pugx.org/tmquang6805/phalex/downloads.svg" /></a>
+<a href="https://packagist.org/packages/tmquang6805/phalex"><img alt="License" src="https://poser.pugx.org/tmquang6805/phalex/license.svg" /></a></p>
+<h2>Introduction</h2>
+<p>The name <strong>Phalex</strong> is a contraction of the words [Phal]con [Ex]tension.<br />
+<code>Phalcon</code> is good, which is the fastest one PHP framework. However, when I develop web applications based on the Phalcon native, I realized most is the lambda functions. This is not bad, fast development, but in my opinion, it is somewhat difficult to maintain and manage code. So, I built this project aims to pack a few things, such as the application configurations, routing ...</p>
+<p>Phalex bases on <strong>Plug &amp; Play Multi Modules</strong> mechanism, so you can easy to develop multiple modules for your application. Something good in Phalex</p>
+<ul>
+<li><strong>Configuration</strong> in Phalex application will be separated in each module. When runtime, Phalex auto merges all configurations into one, and you can easy to cache them.</li>
+<li>You <strong>must not</strong> set <code>view</code> service for each module, Phalex bases on DRY concept, so you just config <strong>views_dir</strong> for module, when runtime, Phalex auto set <code>view</code> service for yours.</li>
+<li><strong>Router</strong> handler via configuration.</li>
+<li><strong>Auto load</strong> for each module via configuration and you can call class cross modules.</li>
+<li>Default <strong>Error Handler</strong>, and you easy to extend or replace Phalex Error Handler</li>
+<li>Highly <strong>Unit test</strong> with <a href="https://phpunit.de/">PHPUnit</a></li>
+<li>And more ...</li>
+</ul>
+<h2>System Requirements</h2>
+<ul>
+<li>Require <strong>PHP 5.5</strong> or later. (We recommend using latest PHP version whenever possible)</li>
+<li><a href="http://phalconphp.com/en/">Phalcon Framework 1.3</a> or later (I don't test with Phalcon Framework 2.0, so I don't recommend use version 2.0 with Phalex)</li>
+</ul>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

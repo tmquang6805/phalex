@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Service Manager</h1>
+<h2>Introduction</h2>
+<p><strong>Service Manager</strong> in Phalex that is DI in native Phalcon. In native Phalcon, most of DI services is set by 
+lambda function (Closure). The second way, you can set DI services by config <code>PHP Array</code>. Personally, 
+I don't like use lambda function for setting DI services. Lambda functions are fast, but hard to maintain. And with 
+the second way, I think them also hard to develop, maintain.</p>
+<p>In Phalex, <strong>Service Manager</strong> has tree types: <code>invokables, factories, shared</code>.</p>
+<h2>Invokables</h2>
+<h3>Example 1</h3>
+<pre><code class="language-php">return [
+    'service_manager' =&gt; [
+        'invokables' =&gt; [
+            'arrayObject' =&gt; \ArrayObject::class
+        ]
+    ],
+];</code></pre>
+<p>In <em>example 1</em>, you set DI service <code>arrayObject</code> is instance of class <code>ArrayObject</code> . So, <strong>invokables</strong> is very simple.<br />
+And in Controller/Action (or somewhere can call DI Phalcon), you can get this service by this way</p>
+<pre><code class="language-php">$this-&gt;getDI()-&gt;get('arrayObject')</code></pre>
+<h2>Factories</h2>
+<h3>Example 2</h3>
+<pre><code class="language-php">return [
+    'service_manager' =&gt; [
+        'factories' =&gt; [
+            'myDbInstance' =&gt; \My\Factory\Db::class
+        ]
+    ],
+];</code></pre>
+<p>In <em>example 2</em>, you set DI service <code>myDbInstance</code>, but it is <strong>NOT</strong> instance of class <code>My\Factory\Db</code>. When you
+config service manager with <strong>factories</strong>, you must specify the class name to create instance for you.</p>
+<h3>Example 3</h3>
+<pre><code class="language-php">
+&lt;?php
+
+namespace My\Factory;
+
+use Phalex\Di\DiFactoryInterface;
+use Phalex\Di\Di;
+
+class Db implements DiFactoryInterface
+{
+    public function createService(Di $di)
+    {
+        $config = $di-&gt;get('config');
+        $pdo = new \PDO($config['db']['dsn'], $config['db']['username'], $config['db']['password']);
+        return $pdo;
+    }
+}</code></pre>
+<p>In <em>example 3</em>, you can see the class <code>My\Factory\Db</code> implements <code>Phalex\Di\DiFactoryInterface</code> interface. In
+method <code>createService()</code>, it return instance of class <code>PDO</code>. So, when you get service DI <strong>myDbInstance</strong>, that means
+you get instance of class <code>PDO</code></p>
+<h2>Shared</h2>
+<p>Shared service for get singleton instance. It apply for both <code>invokables</code> and <code>factories</code> service. By default, services
+in Phalex application are always set shared instance. So, if you want to get new instance for each call, you just set
+this config to <code>false</code></p>
+<h3>Example 4</h3>
+<pre><code class="language-php">return [
+    'service_manager' =&gt; [
+        'factories' =&gt; [
+            'myDbInstance' =&gt; \My\Factory\Db::class
+        ],
+        'shared' =&gt; [
+            'myDbInstance' =&gt; false,
+        ],
+    ],
+];</code></pre>
+<h3>Example 5</h3>
+<pre><code class="language-php">return [
+    'service_manager' =&gt; [
+        'invokables' =&gt; [
+            'arrayObject' =&gt; \ArrayObject::class
+        ],
+        'shared' =&gt; [
+            'arrayObject' =&gt; false,
+        ],
+    ],
+];</code></pre>
+<h3>Example 6</h3>
+<pre><code class="language-php">return [
+    'service_manager' =&gt; [
+        'factories' =&gt; [
+            'myDbInstance' =&gt; \My\Factory\Db::class
+        ],
+        'invokables' =&gt; [
+            'arrayObject' =&gt; \ArrayObject::class
+        ],
+        'shared' =&gt; [
+            'myDbInstance' =&gt; false,
+            'arrayObject' =&gt; false,
+        ],
+    ],
+];</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

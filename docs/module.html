@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Phalex</title>
+
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://tmquang6805.github.io/phalex/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://tmquang6805.github.io/phalex/">
+                Phalex
+                <small class="hidden-xs hidden-sm">
+                    Library build on top PhalconPHP Framwork.
+                </small>
+            </a>
+
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/">
+                                        Home
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/install.html">
+                                        Intallation
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/module.html">
+                                        Module
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/service_manager.html">
+                                        Service Manager
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/error_handler.html">
+                                        Error Handler
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/routing.html">
+                                        Routing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://tmquang6805.github.io/phalex/docs/view.html">
+                                        View
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1>Module</h1>
+<h2>Introduction</h2>
+<p>Phalex bases on <strong>Plug &amp; Play Multi Modules</strong> mechanism, so you can easy to develop multiple modules for your application.<br />
+Each module in Phalex application must contain class <code>Module</code>, and namespace of the class that is <strong>Module's name</strong>. Example:</p>
+<pre><code class="language-php">&lt;?php
+
+namespace Application;
+
+use Phalex\Mvc\Module\AbstractModule;
+
+class Module extends AbstractModule
+{
+    public function getConfig()
+    {
+        /* Module's configurations */
+    }
+
+    public function getAutoloaderConfig()
+    {
+        /* Configurations for autoloader */
+    }
+}</code></pre>
+<h2>Class Module</h2>
+<ul>
+<li>namespace: <code>Module's name</code></li>
+<li>This class must extend abstract class <code>\Phalex\Mvc\Module\AbstractModule</code></li>
+<li>When <code>Module</code> is extended abstract class <code>\Phalex\Mvc\Module\AbstractModule</code> must be implemented 2 abstract methods
+<ul>
+<li><code>getConfig()</code>: return <strong>PHP Array</strong> for module's configurations.</li>
+<li><code>getAutoloaderConfig()</code>: return <strong>PHP Array</strong> for module's autoloader configurations.</li>
+</ul></li>
+</ul>
+<h3>Method getConfig()</h3>
+<p>This configuration, you can config about <a href="view.html">view</a>, <a href="service_manager.html">service_manager</a>, <a href="routing.html">router</a>, and more... Example:</p>
+<pre><code class="language-php">public function getConfig()
+{
+    return [
+        'error_handler' =&gt; [
+            'options' =&gt; [
+                'views_dir' =&gt; __DIR__ . '/../view/error',
+                'template_500' =&gt; 'error',
+                'template_404' =&gt; 'not-found'
+            ],
+        ],
+        'view'   =&gt; [
+            __NAMESPACE__ =&gt; __DIR__ . '/../view/'
+        ],
+        'router' =&gt; [
+            'home'              =&gt; [
+                'route'       =&gt; '/',
+                'definitions' =&gt; [
+                    'module'     =&gt; __NAMESPACE__,
+                    'namespace'  =&gt; Controller::class,
+                    'controller' =&gt; 'index',
+                    'action'     =&gt; 'index'
+                ],
+            ],
+            'controller/action' =&gt; [
+                'route'       =&gt; '/:controller/:action',
+                'definitions' =&gt; [
+                    'module'     =&gt; __NAMESPACE__,
+                    'namespace'  =&gt; Controller::class,
+                    'controller' =&gt; 1,
+                    'action'     =&gt; 2,
+                    'params'     =&gt; 3
+                ],
+            ],
+        ],
+        'db' =&gt; [
+            'dns' =&gt; 'mysql:host=localhost;dbname=test';
+            'username' =&gt; 'root',
+            'password' =&gt; '',
+        ],
+    ];
+}</code></pre>
+<p>In <code>Phalex Module</code>, I recommend you should set this configuration into one file, and <strong>require/include</strong> it</p>
+<pre><code class="language-php">public function getConfig()
+{
+    return require __DIR__ . '/config/module.config.php';
+}</code></pre>
+<h3>Method getAutoloaderConfig()</h3>
+<p>This is config for autoloader, in Phalex application, support autoload via <strong>namespace</strong> and <strong>classmap</strong>. Example:</p>
+<pre><code class="language-php">public function getAutoloaderConfig()
+{
+    return [
+        'namespaces' =&gt; [
+            Controller::class =&gt; __DIR__ . '/../src/Controller',
+        ],
+        'classmap'   =&gt; [
+            __DIR__ . '/../module.classmap.php'
+        ]
+    ];
+}</code></pre>
+<p>In this case, when runtime, classes with <strong>namespace</strong> <code>Application\Controller</code> or classes in <strong>Array classmap</strong> will be auto-loaded. As the same method <code>getConfig()</code>, I recommend you should set this configuration into one file, and <strong>require/include</strong> it.</p>
+<pre><code class="language-php">public function getAutoloaderConfig()
+{
+    return require __DIR__ . '/config/autoload.config.php';
+}</code></pre>
+<h2>Enable Module in Phalex</h2>
+<p>In <code>Phalex-Skeleton</code>, you can <strong>enable/disable</strong> Module in <code>config/application.conf.php</code> file</p>
+<pre><code class="language-php">// This must be an array of module namespaces used in the application
+'modules' =&gt; [
+    'Application',
+],</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="http://yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>
