@@ -1,7 +1,7 @@
 template:
     directory: website
 
-baseUrl: http://127.0.0.1:8000
+baseUrl: http://tmquang6805.github.io/phalex/
 
 exclude:
     - vendor
@@ -18,6 +18,9 @@ menu:
         home:
             text: Home
             relativeUrl:
+        Install:
+            text: Intallation
+            relativeUrl: docs/install.html
         Module:
             text: Module
             relativeUrl: docs/module.html

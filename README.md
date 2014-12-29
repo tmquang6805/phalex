@@ -3,6 +3,10 @@
 [![Build Status](https://travis-ci.org/tmquang6805/phalex.svg?branch=master)](https://travis-ci.org/tmquang6805/phalex)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tmquang6805/phalex/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tmquang6805/phalex/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/tmquang6805/phalex/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/tmquang6805/phalex/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/tmquang6805/phalex/v/stable.svg)](https://packagist.org/packages/tmquang6805/phalex)
+[![Total Downloads](https://poser.pugx.org/tmquang6805/phalex/downloads.svg)](https://packagist.org/packages/tmquang6805/phalex)
+[![License](https://poser.pugx.org/tmquang6805/phalex/license.svg)](https://packagist.org/packages/tmquang6805/phalex)
 
 ## Introduction
 
