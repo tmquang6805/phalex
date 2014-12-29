@@ -2,6 +2,9 @@ before_commands:
     - "composer update --prefer-source"
 
 tools:
+    external_code_coverage:
+        enabled: true
+        timeout: 600
     php_code_sniffer:
         enabled: true
         config:
@@ -19,7 +22,7 @@ tools:
             paths: ["library/*", "tests/*"]
     php_loc:
         enabled: true
-        excluded_dirs: ["docs/*", "tests", "vendor", "website"]
+        excluded_dirs: ["docs/*", "vendor", "website"]
     php_mess_detector:
         enabled: true
         filter:
