@@ -22,7 +22,6 @@ use Phalex\Events\Exception;
  */
 class Application
 {
-
     public function boot(Event $event, PhalconApp $app)
     {
         $router = $app->router;
