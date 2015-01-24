@@ -103,15 +103,17 @@ class View extends PhalconView
      */
     private function setVoltEngine(Di $di, array $options = [])
     {
-        if (isset($options['path'])) {
-            $options['compiledPath'] = function ($templatePath) use ($options) {
-                return $this->setCompiledPath($templatePath, $options);
-            };
+        $result = [];
+        if (!isset($options['path'])) {
+            $options['path'] = $this->getViewsDir();
         }
+        $result['compiledPath'] = function ($templatePath) use ($options) {
+            return $this->setCompiledPath($templatePath, $options);
+        };
 
         $engine = new Engine\Volt($this, $di);
-        if (!empty($options)) {
-            $engine->setOptions($options);
+        if (!empty($result)) {
+            $engine->setOptions($result);
         }
         return $engine;
     }
