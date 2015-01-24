@@ -149,9 +149,9 @@ class ApplicationTest extends TestCase
         $view    = $mockDi->get('view');
         $this->assertEquals($config['view']['Application'], rtrim($view->getViewsDir(), '/'));
         $engines = [
-            '.phtml' => Engine\Php::class,
-            '.volt'  => Engine\Volt::class,
+            '.phtml',
+            '.volt',
         ];
-        $this->assertEquals($engines, $view->getRegisteredEngines());
+        $this->assertEquals($engines, array_keys($view->getRegisteredEngines()));
     }
 }

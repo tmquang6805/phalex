@@ -60,10 +60,10 @@ class ViewTest extends TestCase
             'views_dir' => '.',
         ]);
         $engines = [
-            '.phtml' => Engine\Php::class,
-            '.volt'  => Engine\Volt::class,
+            '.phtml',
+            '.volt',
         ];
-        $this->assertEquals($engines, $view->getRegisteredEngines());
+        $this->assertEquals($engines, array_keys($view->getRegisteredEngines()));
     }
 
     public function testConstructorSetEngines()
