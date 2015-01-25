@@ -36,6 +36,8 @@ class View extends PhalconView
      *                                                          this separator in order to create a single file
      *                                                          in the compiled directory. Effect when hierarchical
      *                                                          is FALSE</li>
+     *          <li>['always']          <i>bool</i>             Tell Volt if the templates must be compiled in each
+     *                                                          request or only when they change. Default is FALSE</li>
      *      </ul>
      * </ul>
      * @param array $options (See above)
@@ -110,6 +112,7 @@ class View extends PhalconView
         $result['compiledPath'] = function ($templatePath) use ($options) {
             return $this->setCompiledPath($templatePath, $options);
         };
+        $result['compileAlways'] = isset($options['always']) ? $options['always'] : false;
 
         $engine = new Engine\Volt($this, $di);
         if (!empty($result)) {

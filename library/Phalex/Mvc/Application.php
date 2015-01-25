@@ -34,7 +34,7 @@ class Application
     private function setErrorHanlder()
     {
         $this->diManager->createErrorHandler();
-        $errorHandler = $this->diManager->getDi()->get('errorHandler');
+        $errorHandler = $this->diManager->getDI()->get('errorHandler');
         if (!$errorHandler instanceof Exception\HandlerInterface) {
             throw new \RuntimeException(sprintf('%s is invalid', get_class($errorHandler)));
         }
@@ -65,7 +65,7 @@ class Application
 
     public function run()
     {
-        $diFactory     = $this->diManager->getDi();
+        $diFactory     = $this->diManager->getDI();
         $moduleHandler = $diFactory->get('moduleHandler');
 
         // Register autoloader
