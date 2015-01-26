@@ -111,11 +111,12 @@ class HandlerDefault implements HandlerInterface
     public function exceptionHandler(\Exception $exception)
     {
         $this->view->setVars([
-            'message' => $exception->getMessage(),
-            'file'    => $exception->getFile(),
-            'code'    => $exception->getCode(),
-            'line'    => $exception->getLine(),
-            'trace'   => $exception->getTrace()
+            'message'  => $exception->getMessage(),
+            'file'     => $exception->getFile(),
+            'code'     => $exception->getCode(),
+            'line'     => $exception->getLine(),
+            'trace'    => $exception->getTrace(),
+            'traceStr' => $exception->getTraceAsString(),
         ]);
 
         $statusCode = 500;
