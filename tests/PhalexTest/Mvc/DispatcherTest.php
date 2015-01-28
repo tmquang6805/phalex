@@ -28,7 +28,7 @@ class DispatcherTest extends TestCase
         $this->assertInstanceOf(PhalconDispatcher::class, $dispatcher);
         $di2 = $dispatcher->getDI();
         $this->assertInstanceOf(Di::class, $di2);
-        $this->assertTrue(isset($di2['dispatchEventsManager']));
-        $this->assertInstanceOf(EventsManager::class, $di2->get('dispatchEventsManager'));
+        $this->assertTrue(isset($di2['eventsManager']));
+        $this->assertInstanceOf(EventsManager::class, $di2->get('eventsManager'));
     }
 }

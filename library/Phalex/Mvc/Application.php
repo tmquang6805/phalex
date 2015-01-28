@@ -13,7 +13,7 @@ class Application
 {
     /**
      *
-     * @var Di\DiManager
+     * @var \Phalex\Di\DiManager
      */
     protected $diManager;
 
@@ -61,6 +61,11 @@ class Application
             throw new Exception\RuntimeException($errMsg);
         }
         return new $className($config['options']);
+    }
+    
+    public function getDI()
+    {
+        return $this->diManager->getDI();
     }
 
     public function run()

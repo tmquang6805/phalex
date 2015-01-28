@@ -49,7 +49,7 @@ class Listener
     public function listenDispatchEvents(Listener\Dispatch $listener)
     {
         $this->di
-                ->get('dispatchEventsManager')
+                ->get('eventsManager')
                 ->attach('dispatch', $listener, PHP_INT_MAX);
         return $this;
     }
