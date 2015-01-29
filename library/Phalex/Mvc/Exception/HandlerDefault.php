@@ -21,6 +21,7 @@ use Phalcon\Mvc\View\Engine;
  */
 class HandlerDefault implements HandlerInterface
 {
+
     /**
      *
      * @var ViewSimple
@@ -38,6 +39,18 @@ class HandlerDefault implements HandlerInterface
      * @var Response
      */
     protected $response;
+
+    /**
+     *
+     * @var Di
+     */
+    protected $di;
+
+    /**
+     *
+     * @var string
+     */
+    protected $viewsDir;
 
     /**
      * Create error handler service
@@ -65,28 +78,10 @@ class HandlerDefault implements HandlerInterface
             throw new InvalidArgumentException($errMsg);
         }
 
-        $this->createView($di, $realPath)
-                ->createReponse($di);
-        $this->options = $options;
+        $this->options  = $options;
+        $this->di       = $di;
+        $this->viewsDir = $realPath;
         return $this;
-    }
-
-    private function createView(Di $di, $realPath)
-    {
-        $this->view = new ViewSimple();
-        $this->view->setDI($di);
-        $this->view->setViewsDir($realPath . DIRECTORY_SEPARATOR);
-        $this->view->registerEngines([
-            '.phtml' => Engine\Php::class,
-            '.volt'  => Engine\Volt::class,
-        ]);
-        return $this;
-    }
-
-    private function createReponse(Di $di)
-    {
-        $this->response = new Response();
-        $this->response->setDI($di);
     }
 
     /**
@@ -110,7 +105,19 @@ class HandlerDefault implements HandlerInterface
      */
     public function exceptionHandler(\Exception $exception)
     {
-        $this->view->setVars([
+        ob_clean();
+        $view = new ViewSimple();
+        $view->setViewsDir($this->viewsDir . DIRECTORY_SEPARATOR);
+
+        $statusCode = 500;
+        $message    = 'Internal Server Error';
+        $template   = $this->options['template_500'];
+        if ($exception instanceof DispatchException) {
+            $template   = $this->options['template_404'];
+            $statusCode = 404;
+            $message    = 'Not Found';
+        }
+        $content = $view->render($template, [
             'message'  => $exception->getMessage(),
             'file'     => $exception->getFile(),
             'code'     => $exception->getCode(),
@@ -118,20 +125,11 @@ class HandlerDefault implements HandlerInterface
             'trace'    => $exception->getTrace(),
             'traceStr' => $exception->getTraceAsString(),
         ]);
-
-        $statusCode = 500;
-        $message    = 'Internal Server Error';
-
-        $template = $this->options['template_500'];
-        if ($exception instanceof DispatchException) {
-            $template   = $this->options['template_404'];
-            $statusCode = 404;
-            $message    = 'Not Found';
-        }
-
-        $content = $this->view->render($template);
-        $this->response->setContent($content)
+        $response = new Response();
+        $response->setContent($content)
                 ->setStatusCode($statusCode, $message)
                 ->send();
+
+        exit;
     }
 }
