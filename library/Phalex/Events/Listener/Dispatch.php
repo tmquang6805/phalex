@@ -35,11 +35,12 @@ class Dispatch
 
         //Use odd parameters as keys and even as values
         foreach ($params as $number => $value) {
-            if ($number & 1) {
+            if (is_int($number) && $number & 1) {
                 $keyParams[$params[$number - 1]] = $value;
                 unset($params[$number - 1], $params[$number]);
             }
         }
+        $keyParams = array_merge($keyParams, $params);
         
         //Override parameters
         $dispatcher->setParams($keyParams);
