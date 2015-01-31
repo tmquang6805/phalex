@@ -12,7 +12,6 @@ use Phalex\Di\Di;
 use Phalcon\Mvc\View\Simple as ViewSimple;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
-use Phalcon\Mvc\View\Engine;
 
 /**
  * Description of HandlerDefault
@@ -21,7 +20,6 @@ use Phalcon\Mvc\View\Engine;
  */
 class HandlerDefault implements HandlerInterface
 {
-
     /**
      *
      * @var ViewSimple
