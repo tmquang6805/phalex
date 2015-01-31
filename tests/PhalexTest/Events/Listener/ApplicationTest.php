@@ -16,7 +16,6 @@ use Phalex\Mvc\Router;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Application as PhalconApp;
 use Phalcon\Config;
-use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View as PhalconView;
 use Phalcon\Mvc\Router\Route;
 use Phalcon\Http\Request as PhalconRequest;
@@ -104,7 +103,7 @@ class ApplicationTest extends TestCase
                 ->method('get')
                 ->with('config')
                 ->will($this->returnValue(new Config(require './tests/config/config.result.php')));
-        $mockDi->expects($this->once())
+        $mockDi->expects($this->atLeastOnce())
                 ->method('set');
 
         $mockApp = $this->getMockBuilder(PhalconApp::class)
