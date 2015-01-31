@@ -12,8 +12,10 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\Application as PhalconApp;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 use Phalcon\Config;
+use Phalcon\Mvc\Url as UrlService;
 use Phalex\Mvc\View;
 use Phalex\Events\Exception;
+use Phalex\Di\Di;
 
 /**
  * Description of Application
@@ -48,10 +50,15 @@ class Application
         return $volt;
     }
 
-    public function beforeStartModule(Event $event, PhalconApp $app, $moduleName)
+    /**
+     * Set service view for application when module start
+     * @param Di $di
+     * @param Config $config
+     * @param string $moduleName
+     * @return \Phalex\Events\Listener\Application
+     */
+    private function setViewService(Di $di, Config $config, $moduleName)
     {
-        $di       = $app->getDI();
-        $config   = $di->get('config');
         $viewsDir = $config['view'][$moduleName];
         $volt     = $this->setVoltOptions($config, $moduleName);
 
@@ -61,5 +68,39 @@ class Application
             'volt'      => $volt
         ];
         $di->set('view', new View($options), true);
+        return $this;
+    }
+
+    /**
+     * Set url service when module start
+     * @param Di $di
+     * @param Config $config
+     * @param string $name Module name
+     * @return \Phalex\Events\Listener\Application
+     */
+    private function setUrlService(Di $di, Config $config, $name)
+    {
+        $base   = $static = '/';
+        if (isset($config['url'])) {
+            $default = isset($config['url']['default']) ? $config['url']['default'] : '/';
+            if (isset($config['url'][$name])) {
+                $base   = isset($config['url'][$name]['uri']) ? $config['url'][$name]['uri'] : $default;
+                $static = isset($config['url'][$name]['static']) ? $config['url'][$name]['static'] : $default;
+            }
+        }
+        
+        $url = new UrlService();
+        $url->setBaseUri($base);
+        $url->setStaticBaseUri($static);
+        $di->set('url', $url, true);
+        return $this;
+    }
+
+    public function beforeStartModule(Event $event, PhalconApp $app, $moduleName)
+    {
+        $di     = $app->getDI();
+        $config = $di->get('config');
+        $this->setViewService($di, $config, $moduleName)
+                ->setUrlService($di, $config, $moduleName);
     }
 }
