@@ -17,7 +17,7 @@ use Phalcon\Http\Response;
  */
 class ResponseJson extends Response
 {
-    public function __construct($content)
+    public function __construct($content = null)
     {
         parent::__construct();
         $this->setContentType('application/json', 'UTF-8');
