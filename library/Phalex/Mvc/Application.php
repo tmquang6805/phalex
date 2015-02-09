@@ -8,6 +8,7 @@ use Phalex\Config\Config as ConfigHandler;
 use Phalex\Di;
 use Phalex\Loader\Autoloader;
 use Phalex\Events\Listener;
+use Phalex\Console\Application as AppConsole;
 
 class Application
 {
@@ -62,13 +63,17 @@ class Application
         }
         return new $className($config['options']);
     }
-    
+
     public function getDI()
     {
         return $this->diManager->getDI();
     }
 
-    public function run()
+    /**
+     * Initialize phalcon application
+     * @return PhalconApplication
+     */
+    protected function initPhalconApplication()
     {
         $diFactory     = $this->diManager->getDI();
         $moduleHandler = $diFactory->get('moduleHandler');
@@ -91,6 +96,17 @@ class Application
         $application->setEventsManager($diFactory['eventsManager']);
         $application->registerModules($moduleHandler->getRegisteredModules());
 
-        $application->handle()->send();
+        return $application;
+    }
+
+    public function run()
+    {
+        $application = $this->initPhalconApplication();
+
+        if (php_sapi_name() != 'cli') {
+            $application->handle()->send();
+        } else {
+            (new AppConsole($this->getDI()))->run();
+        }
     }
 }

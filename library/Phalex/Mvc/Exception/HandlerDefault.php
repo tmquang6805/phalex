@@ -103,7 +103,9 @@ class HandlerDefault implements HandlerInterface
      */
     public function exceptionHandler(\Exception $exception)
     {
-        ob_clean();
+        if (count(ob_list_handlers())) {
+            ob_clean();
+        }
         $view = new ViewSimple();
         $view->setViewsDir($this->viewsDir . DIRECTORY_SEPARATOR);
 
@@ -115,7 +117,7 @@ class HandlerDefault implements HandlerInterface
             $statusCode = 404;
             $message    = 'Not Found';
         }
-        $content = $view->render($template, [
+        $content  = $view->render($template, [
             'message'  => $exception->getMessage(),
             'file'     => $exception->getFile(),
             'code'     => $exception->getCode(),
@@ -123,11 +125,7 @@ class HandlerDefault implements HandlerInterface
             'trace'    => $exception->getTrace(),
             'traceStr' => $exception->getTraceAsString(),
         ]);
-        $response = new Response();
-        $response->setContent($content)
-                ->setStatusCode($statusCode, $message)
-                ->send();
-
+        (new Response())->setContent($content)->setStatusCode($statusCode, $message)->send();
         exit;
     }
 }
