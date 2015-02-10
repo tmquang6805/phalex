@@ -156,4 +156,102 @@ class ApplicationTest extends TestCase
         $this->assertEquals($config['url'][$module]['uri'], $mockDi->get('url')->getBaseUri());
         $this->assertEquals($config['url'][$module]['static'], $mockDi->get('url')->getStaticBaseUri());
     }
+
+    /**
+     * @group listener
+     * @expectedException \Phalex\Events\Exception\RuntimeException
+     * @expectedExceptionMessage Not found compiled folder for volt engine
+     */
+    public function testBeforeStartModuleWithVoltNotFound()
+    {
+        $config         = require './tests/config/config.result.php';
+        $module         = 'Application';
+        $config['volt'] = [
+            $module => [
+                'path' => __DIR__ . '/../compiled/',
+            ],
+        ];
+
+        $mockDi = new Di($config);
+
+        $mockApp = $this->getMockBuilder(PhalconApp::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $mockApp->expects($this->once())
+                ->method('getDI')
+                ->will($this->returnValue($mockDi));
+
+        $mockEvent = $this->getMockBuilder(Event::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $appListen = new ListenApp();
+        $appListen->beforeStartModule($mockEvent, $mockApp, $module);
+    }
+
+    /**
+     * @group listener
+     * @expectedException \Phalex\Events\Exception\RuntimeException
+     * @expectedExceptionMessage Compiled folder is not writable
+     */
+    public function testBeforeStartModuleWithVoltNotWritable()
+    {
+        $folder = 'tests/module/Application/compiled';
+        chmod($folder, 0555);
+        $config         = require './tests/config/config.result.php';
+        $module         = 'Application';
+        $config['volt'] = [
+            $module => [
+                'path' => $folder,
+            ],
+        ];
+
+        $mockDi = new Di($config);
+
+        $mockApp = $this->getMockBuilder(PhalconApp::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $mockApp->expects($this->once())
+                ->method('getDI')
+                ->will($this->returnValue($mockDi));
+
+        $mockEvent = $this->getMockBuilder(Event::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $appListen = new ListenApp();
+        $appListen->beforeStartModule($mockEvent, $mockApp, $module);
+    }
+    
+    /**
+     * @group listener
+     */
+    public function testBeforeStartModuleWithVoltSuccess()
+    {
+        $folder = 'tests/module/Application/compiled';
+        chmod($folder, 0777);
+        $config         = require './tests/config/config.result.php';
+        $module         = 'Application';
+        $config['volt'] = [
+            $module => [
+                'path' => $folder,
+            ],
+        ];
+
+        $mockDi = new Di($config);
+
+        $mockApp = $this->getMockBuilder(PhalconApp::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+        $mockApp->expects($this->once())
+                ->method('getDI')
+                ->will($this->returnValue($mockDi));
+
+        $mockEvent = $this->getMockBuilder(Event::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $appListen = new ListenApp();
+        $appListen->beforeStartModule($mockEvent, $mockApp, $module);
+    }
 }
