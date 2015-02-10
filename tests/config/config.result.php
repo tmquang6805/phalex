@@ -7,12 +7,12 @@ $cwd = getcwd();
 return [
     'error_handler' => [
         'options' => [
-            'views_dir' => $cwd . '/tests/module/Application/config/../view/error',
+            'views_dir'    => $cwd . '/tests/module/Application/config/../view/error',
             'template_500' => 'error.phtml',
             'template_404' => 'not-found.phtml'
         ],
     ],
-    'router' => [
+    'router'        => [
         'home'                 => [
             'route'       => '/',
             'definitions' => [
@@ -92,11 +92,11 @@ return [
             'host_name'   => 'api.test-example.com',
         ],
     ],
-    'view'   => [
+    'view'          => [
         'Application' => $cwd . '/tests/module/Application/view',
         'Backend'     => $cwd . '/tests/module/Backend/view',
     ],
-    'db'     => [
+    'db'            => [
         'master' => [
             'adapter'  => Mysql::class,
             'dbname'   => 'test',
@@ -132,6 +132,12 @@ return [
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             ],
+        ],
+    ],
+    'url'           => [
+        'Application' => [
+            'uri'    => 'http://example.demo/',
+            'static' => 'http://cdn.example.demo/'
         ],
     ],
 ];

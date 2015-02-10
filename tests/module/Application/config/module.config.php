@@ -3,19 +3,19 @@
 namespace Application;
 
 return [
-    'view'   => [
+    'view'          => [
         __NAMESPACE__ => __DIR__ . '/../view/'
     ],
     'error_handler' => [
         'options' => [
-            'views_dir' => __DIR__ . '/../view/error',
+            'views_dir'    => __DIR__ . '/../view/error',
             'template_500' => 'error.phtml',
             'template_404' => 'not-found.phtml'
         ],
     ],
-    'router' => [
+    'router'        => [
         'home' => [
-            'route'   => '/',
+            'route'       => '/',
             'definitions' => [
                 'module'     => __NAMESPACE__,
                 'namespace'  => Controller::class,
@@ -25,7 +25,7 @@ return [
         ],
         'news' => [
             'route'       => '/news/([a-z0-9-]+)-([1-9][0-9]*)\.html',
-            'definitions'     => [
+            'definitions' => [
                 'module'     => __NAMESPACE__,
                 'namespace'  => Controller::class,
                 'controller' => 'article',
@@ -38,6 +38,12 @@ return [
                     'class_name' => Router\ConvertId::class
                 ],
             ],
+        ],
+    ],
+    'url'           => [
+        __NAMESPACE__ => [
+            'uri'    => 'http://example.demo/',
+            'static' => 'http://cdn.example.demo/'
         ],
     ],
 ];
