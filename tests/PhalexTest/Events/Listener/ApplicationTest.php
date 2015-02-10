@@ -127,6 +127,7 @@ class ApplicationTest extends TestCase
     public function testBeforeStartModule()
     {
         $config = require './tests/config/config.result.php';
+        $module = 'Application';
         $mockDi = new Di($config);
 
         $mockApp = $this->getMockBuilder(PhalconApp::class)
@@ -141,7 +142,7 @@ class ApplicationTest extends TestCase
                 ->getMock();
 
         $appListen = new ListenApp();
-        $appListen->beforeStartModule($mockEvent, $mockApp, 'Application');
+        $appListen->beforeStartModule($mockEvent, $mockApp, $module);
 
         $this->assertInstanceOf(View::class, $mockDi->get('view'));
         $this->assertInstanceOf(PhalconView::class, $mockDi->get('view'));
@@ -152,5 +153,7 @@ class ApplicationTest extends TestCase
             '.volt',
         ];
         $this->assertEquals($engines, array_keys($view->getRegisteredEngines()));
+        $this->assertEquals($config['url'][$module]['uri'], $mockDi->get('url')->getBaseUri());
+        $this->assertEquals($config['url'][$module]['static'], $mockDi->get('url')->getStaticBaseUri());
     }
 }
