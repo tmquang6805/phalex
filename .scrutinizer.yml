@@ -36,7 +36,11 @@ tools:
             paths: ["library/*", "tests/*"]
 build:
     environment:
-        php: '5.5.14'
+        php:
+            version: 5.5.14
+            ini:
+                'extension': 'phalcon.so'
+
     dependencies:
         before:
             - sudo apt-get update
@@ -44,6 +48,4 @@ build:
             - git clone --depth=1 git://github.com/phalcon/cphalcon.git
             - cd cphalcon/build
             - sudo ./install
-            - sudo echo "extension=phalcon.so" > /etc/php5/cli/php.ini
-            - sudo echo "extension=phalcon.so" > /etc/php5/apache2/php.ini
             - sudo service apache2 restart
