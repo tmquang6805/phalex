@@ -39,7 +39,7 @@ build:
         php:
             version: 5.5.14
             ini:
-                'extension': 'phalcon.so'
+                'extension': '/usr/lib/php5/20121212/phalcon.so'
 
     dependencies:
         before:
