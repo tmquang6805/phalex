@@ -39,7 +39,7 @@ build:
         php: '5.5.14'
     dependencies:
         before:
-            - sudo apt-get install -y php5-dev libpcre3-dev gcc make php5-mysql
+            - sudo apt-get install -y --fix-missing php5-dev libpcre3-dev gcc make php5-mysql
             - git clone --depth=1 git://github.com/phalcon/cphalcon.git
             - cd cphalcon/build
             - sudo ./install
