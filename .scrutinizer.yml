@@ -36,7 +36,7 @@ tools:
             paths: ["library/*", "tests/*"]
 build:
     environment:
-        php: '5.5.21'
+        php: '5.5.14'
     dependencies:
         before:
             - sudo apt-get install php5-dev libpcre3-dev gcc make php5-mysql
