@@ -14,6 +14,14 @@ return array(
         'Application' => $dir . '/tests/module/Application/view',
         'Backend'     => $dir . '/tests/module/Backend/view',
     ),
+    'volt'            => [
+        'Application' => [
+            'path'         => $dir . '/tests/module/Application/compiled',
+            'extension'    => '.compiled',
+            'hierarchical' => true,
+            'always'       => true,
+        ],
+    ],
     'router'        => array(
         'home'    => array(
             'route'       => '/',

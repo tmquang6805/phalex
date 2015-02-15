@@ -96,6 +96,14 @@ return [
         'Application' => $cwd . '/tests/module/Application/view',
         'Backend'     => $cwd . '/tests/module/Backend/view',
     ],
+    'volt'            => [
+        'Application' => [
+            'path'         => $cwd . '/tests/module/Application/compiled',
+            'extension'    => '.compiled',
+            'hierarchical' => true,
+            'always'       => true,
+        ],
+    ],
     'db'            => [
         'master' => [
             'adapter'  => Mysql::class,

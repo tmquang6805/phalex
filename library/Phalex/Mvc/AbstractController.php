@@ -19,6 +19,11 @@ use Phalex\Http\ResponseJson;
  */
 abstract class AbstractController extends Controller
 {
+    /**
+     * @codeCoverageIgnore
+     * @param ResponseJson $response
+     * @param Exception $exc
+     */
     protected function ajaxExceptionCatch(ResponseJson &$response, Exception $exc)
     {
         $response->setContent(json_encode([

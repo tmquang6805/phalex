@@ -6,6 +6,14 @@ return [
     'view'          => [
         __NAMESPACE__ => __DIR__ . '/../view/'
     ],
+    'volt'            => [
+        __NAMESPACE__ => [
+            'path'         => __DIR__ . '/../compiled/',
+            'extension'    => '.compiled',
+            'hierarchical' => true,
+            'always'       => true,
+        ],
+    ],
     'error_handler' => [
         'options' => [
             'views_dir'    => __DIR__ . '/../view/error',
