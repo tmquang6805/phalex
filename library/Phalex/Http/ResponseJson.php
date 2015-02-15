@@ -12,7 +12,7 @@ use Phalcon\Http\Response;
 
 /**
  * Description of ResponseJson
- *
+ * @codeCoverageIgnore
  * @author quangtm
  */
 class ResponseJson extends Response
