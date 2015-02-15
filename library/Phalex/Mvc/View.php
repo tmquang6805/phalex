@@ -54,7 +54,7 @@ class View extends PhalconView
         $this->setViewsDir($options['views_dir']);
         $engines = [
             '.phtml' => Engine\Php::class,
-            '.volt'  => $this->setVoltEngine($options['di'], isset($options['volt']) ? $options['volt'] : [])
+            '.volt'  => $this->setVoltEngine(isset($options['volt']) ? $options['volt'] : [])
         ];
         if (isset($options['engines'])) {
             $engines = $options['engines'];
@@ -68,11 +68,14 @@ class View extends PhalconView
      * @param string $templatePath template view path
      * @param array $options config for volt engine
      */
-    private function setCompiledPath($templatePath, $options)
+    public function getCompiledPath($templatePath, $options = [])
     {
         $viewsDir = $this->getViewsDir();
+        if (!isset($options['path'])) {
+            $options['path'] = $viewsDir;
+        }
 
-        $relativeViewFile = str_replace($viewsDir, '', $templatePath);
+        $relativeViewFile = trim(str_replace($viewsDir, '', $templatePath), DIRECTORY_SEPARATOR);
         if (!isset($options['hierarchical']) || !$options['hierarchical']) {
             $separator    = isset($options['separator']) ? $options['separator'] : '__';
             $compliedPath = str_replace(DIRECTORY_SEPARATOR, $separator, $relativeViewFile);
@@ -99,19 +102,21 @@ class View extends PhalconView
     /**
      * Set volt engine with options
      *
-     * @param Di $di
      * @param array $options
      * @return \Phalcon\Mvc\View\Engine\Volt
      */
-    private function setVoltEngine(Di $di, array $options = [])
+    private function setVoltEngine(array $options = [])
     {
+        $di = $this->getDI();
         $result = [];
         if (!isset($options['path'])) {
             $options['path'] = $this->getViewsDir();
         }
+        // @codeCoverageIgnoreStart
         $result['compiledPath'] = function ($templatePath) use ($options) {
-            return $this->setCompiledPath($templatePath, $options);
+            return $this->getCompiledPath($templatePath, $options);
         };
+        // @codeCoverageIgnoreEnd
         $result['compileAlways'] = isset($options['always']) ? $options['always'] : false;
 
         $engine = new Engine\Volt($this, $di);

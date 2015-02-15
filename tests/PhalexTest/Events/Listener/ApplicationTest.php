@@ -196,7 +196,7 @@ class ApplicationTest extends TestCase
      */
     public function testBeforeStartModuleWithVoltNotWritable()
     {
-        $folder = 'tests/module/Application/compiled';
+        $folder         = 'tests/module/Application/compiled';
         chmod($folder, 0555);
         $config         = require './tests/config/config.result.php';
         $module         = 'Application';
@@ -222,7 +222,7 @@ class ApplicationTest extends TestCase
         $appListen = new ListenApp();
         $appListen->beforeStartModule($mockEvent, $mockApp, $module);
     }
-    
+
     /**
      * @group listener
      */
@@ -230,13 +230,8 @@ class ApplicationTest extends TestCase
     {
         $folder = 'tests/module/Application/compiled';
         chmod($folder, 0777);
-        $config         = require './tests/config/config.result.php';
-        $module         = 'Application';
-        $config['volt'] = [
-            $module => [
-                'path' => $folder,
-            ],
-        ];
+        $config = require './tests/config/config.result.php';
+        $module = 'Application';
 
         $mockDi = new Di($config);
 

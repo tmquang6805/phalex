@@ -20,6 +20,7 @@ use Phalcon\Mvc\View\Engine;
  */
 class ViewTest extends TestCase
 {
+
     public function supplyTestConstructorRaiseException()
     {
         $di = $this->getMock(Di::class, ['get', 'set'], [[]]);
@@ -69,7 +70,7 @@ class ViewTest extends TestCase
     public function testConstructorSetEngines()
     {
         $di = $this->getMock(Di::class, ['get'], [[]]);
-        
+
         $options = [
             'di'        => $di,
             'views_dir' => '.',
@@ -77,7 +78,68 @@ class ViewTest extends TestCase
                 '.phtml' => Engine\Php::class,
             ]
         ];
-        $view    = new View($options);
+
+        $view = new View($options);
         $this->assertEquals($options['engines'], $view->getRegisteredEngines());
+    }
+
+    public function testGetCompiledPath()
+    {
+
+        $di      = $this->getMock(Di::class, ['get'], [[]]);
+        $viewDir = getcwd() . '/tests/module/Application/view/';
+
+        $view     = new View([
+            'di'        => $di,
+            'views_dir' => $viewDir,
+        ]);
+        $viewVolt = '/index/index.volt';
+
+        $this->assertEquals($viewDir . 'index__index.volt.php', $view->getCompiledPath($viewDir . $viewVolt));
+
+        $pathCompiled = getcwd() . '/tests/module/Application/compiled/';
+        $compiledFile = $view->getCompiledPath($viewDir . $viewVolt, [
+            'path' => $pathCompiled
+        ]);
+        $this->assertEquals($pathCompiled . 'index__index.volt.php', $compiledFile);
+
+        rmdir($pathCompiled . 'index');
+        $compiledFile = $view->getCompiledPath($viewDir . $viewVolt, [
+            'path'         => $pathCompiled,
+            'hierarchical' => true,
+            'extension'    => '.com'
+        ]);
+        $this->assertEquals($pathCompiled . 'index/index.volt.com', $compiledFile);
+        rmdir($pathCompiled . 'index');
+    }
+
+    /**
+     * @group dev
+     */
+    public function testGetCompiledPathRaiseException()
+    {
+        $pathCompiled = getcwd() . '/tests/module/Application/compiled/';
+        $folderCompiler = $pathCompiled . 'index';
+        $msg= sprintf('Cannot write compile view to "%s"', $folderCompiler);
+        $this->setExpectedException(\Phalex\Mvc\Exception\RuntimeException::class, $msg);
+        $di      = $this->getMock(Di::class, ['get'], [[]]);
+        $viewDir = getcwd() . '/tests/module/Application/view/';
+
+        $view     = new View([
+            'di'        => $di,
+            'views_dir' => $viewDir,
+        ]);
+        
+        $viewVolt = '/index/index.volt';
+        if (file_exists($folderCompiler)) {
+            rmdir($folderCompiler);
+        }
+        mkdir($folderCompiler, 0555);
+        
+        $view->getCompiledPath($viewDir . $viewVolt, [
+            'path'         => $pathCompiled,
+            'hierarchical' => true,
+            'extension'    => '.com'
+        ]);
     }
 }
