@@ -103,7 +103,9 @@ class ViewTest extends TestCase
         ]);
         $this->assertEquals($pathCompiled . 'index__index.volt.php', $compiledFile);
 
-        rmdir($pathCompiled . 'index');
+        if (file_exists($pathCompiled . 'index')) {
+            rmdir($pathCompiled . 'index');
+        }
         $compiledFile = $view->getCompiledPath($viewDir . $viewVolt, [
             'path'         => $pathCompiled,
             'hierarchical' => true,
@@ -118,28 +120,29 @@ class ViewTest extends TestCase
      */
     public function testGetCompiledPathRaiseException()
     {
-        $pathCompiled = getcwd() . '/tests/module/Application/compiled/';
+        $pathCompiled   = getcwd() . '/tests/module/Application/compiled/';
         $folderCompiler = $pathCompiled . 'index';
-        $msg= sprintf('Cannot write compile view to "%s"', $folderCompiler);
+        $msg            = sprintf('Cannot write compile view to "%s"', $folderCompiler);
         $this->setExpectedException(\Phalex\Mvc\Exception\RuntimeException::class, $msg);
-        $di      = $this->getMock(Di::class, ['get'], [[]]);
-        $viewDir = getcwd() . '/tests/module/Application/view/';
+        $di             = $this->getMock(Di::class, ['get'], [[]]);
+        $viewDir        = getcwd() . '/tests/module/Application/view/';
 
-        $view     = new View([
+        $view = new View([
             'di'        => $di,
             'views_dir' => $viewDir,
         ]);
-        
+
         $viewVolt = '/index/index.volt';
         if (file_exists($folderCompiler)) {
             rmdir($folderCompiler);
         }
         mkdir($folderCompiler, 0555);
-        
+
         $view->getCompiledPath($viewDir . $viewVolt, [
             'path'         => $pathCompiled,
             'hierarchical' => true,
             'extension'    => '.com'
         ]);
     }
+
 }
