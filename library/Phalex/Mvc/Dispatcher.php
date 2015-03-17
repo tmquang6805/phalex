@@ -34,7 +34,7 @@ class Dispatcher extends PhalconDispatcher
         $eventsManager->enablePriorities(true);
         $eventsManager->collectResponses(true);
         
-        $di->set('dispatchEventsManager', $eventsManager, true);
+        $di->set('eventsManager', $eventsManager, true);
         $this->setEventsManager($eventsManager);
         $this->setDI($di);
         $this->setDefaultAction('index');

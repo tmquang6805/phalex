@@ -84,15 +84,36 @@ class Config
             throw new Exception\InvalidArgumentException('Config view path is not valid');
         }
 
-        foreach ($configViewPaths as $namespace => $viewPath) {
+        foreach ($configViewPaths as $moduleName => $viewPath) {
             $viewPath = realpath($viewPath);
             if (!$viewPath) {
-                $errMsg = sprintf('Config view path for "%s" module is invalid', $namespace);
+                $errMsg = sprintf('Config view path for "%s" module is invalid', $moduleName);
                 throw new Exception\RuntimeException($errMsg);
             }
-            $configViewPaths[$namespace] = $viewPath;
+            $configViewPaths[$moduleName] = $viewPath;
         }
         return $configViewPaths;
+    }
+
+    /**
+     * Filter config volt template engine
+     * @param array $configVolt
+     * @return array
+     * @throws Exception\InvalidArgumentException
+     */
+    protected function filterVoltPath($configVolt)
+    {
+        foreach ($configVolt as $moduleName => $config) {
+            $path = false;
+            if (isset($config['path'])) {
+                unset($configVolt[$moduleName]['path']);
+                $path = realpath($config['path']);
+            }
+            if ($path) {
+                $configVolt[$moduleName]['path'] = $path;
+            }
+        }
+        return $configVolt;
     }
 
     /**
@@ -103,6 +124,7 @@ class Config
     protected function cleanUp(array $configs)
     {
         $configs['view'] = !isset($configs['view']) ? [] : $this->filterViewPath($configs['view']);
+        $configs['volt'] = !isset($configs['volt']) ? [] : $this->filterVoltPath($configs['volt']);
         if ($this->cache instanceof Cache\CacheInterface) {
             $this->cache->setConfig($configs);
         }

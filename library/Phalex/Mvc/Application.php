@@ -8,12 +8,13 @@ use Phalex\Config\Config as ConfigHandler;
 use Phalex\Di;
 use Phalex\Loader\Autoloader;
 use Phalex\Events\Listener;
+use Phalex\Console\Application as AppConsole;
 
 class Application
 {
     /**
      *
-     * @var Di\DiManager
+     * @var \Phalex\Di\DiManager
      */
     protected $diManager;
 
@@ -34,7 +35,7 @@ class Application
     private function setErrorHanlder()
     {
         $this->diManager->createErrorHandler();
-        $errorHandler = $this->diManager->getDi()->get('errorHandler');
+        $errorHandler = $this->diManager->getDI()->get('errorHandler');
         if (!$errorHandler instanceof Exception\HandlerInterface) {
             throw new \RuntimeException(sprintf('%s is invalid', get_class($errorHandler)));
         }
@@ -63,9 +64,18 @@ class Application
         return new $className($config['options']);
     }
 
-    public function run()
+    public function getDI()
     {
-        $diFactory     = $this->diManager->getDi();
+        return $this->diManager->getDI();
+    }
+
+    /**
+     * Initialize phalcon application
+     * @return PhalconApplication
+     */
+    protected function initPhalconApplication()
+    {
+        $diFactory     = $this->diManager->getDI();
         $moduleHandler = $diFactory->get('moduleHandler');
 
         // Register autoloader
@@ -86,6 +96,17 @@ class Application
         $application->setEventsManager($diFactory['eventsManager']);
         $application->registerModules($moduleHandler->getRegisteredModules());
 
-        $application->handle()->send();
+        return $application;
+    }
+
+    public function run()
+    {
+        $application = $this->initPhalconApplication();
+
+        if (php_sapi_name() != 'cli') {
+            $application->handle()->send();
+        } else {
+            (new AppConsole($this->getDI()))->run();
+        }
     }
 }

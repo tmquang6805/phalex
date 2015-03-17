@@ -96,8 +96,8 @@ class DiManagerTest extends TestCase
         });
         $diManager = new DiManager($di);
         $diManager->initRouterDi();
-        $this->assertInstanceOf(Router::class, $diManager->getDi()->get('router'));
-        $router    = $diManager->getDi()->get('router');
+        $this->assertInstanceOf(Router::class, $diManager->getDI()->get('router'));
+        $router    = $diManager->getDI()->get('router');
 
         $httpMethods = [
             'GET'     => true,
@@ -194,9 +194,9 @@ class DiManagerTest extends TestCase
         $diMock = new Di($config);
         $di     = new DiManager($diMock);
         $di->initInvokableServices();
-        $this->assertInstanceOf(Di::class, $di->getDi());
-        $this->assertTrue($di->getDi()->has('ArrayObject'));
-        $this->assertInstanceOf(\ArrayObject::class, $di->getDi()->get('ArrayObject'));
+        $this->assertInstanceOf(Di::class, $di->getDI());
+        $this->assertTrue($di->getDI()->has('ArrayObject'));
+        $this->assertInstanceOf(\ArrayObject::class, $di->getDI()->get('ArrayObject'));
     }
 
     public function supplyTestSharedInvokableServices()
@@ -241,10 +241,10 @@ class DiManagerTest extends TestCase
         $di     = new DiManager($diMock);
         $di->initInvokableServices();
 
-        $obj1 = $di->getDi()->get('myObject');
+        $obj1 = $di->getDI()->get('myObject');
         $this->assertInstanceOf(DateObject::class, $obj1);
         usleep(10000);
-        $obj2 = $di->getDi()->get('myObject');
+        $obj2 = $di->getDI()->get('myObject');
         $this->assertInstanceOf(DateObject::class, $obj2);
         $this->assertEquals($equal, $obj1->time === $obj2->time);
     }
@@ -360,7 +360,7 @@ class DiManagerTest extends TestCase
         $diMock = new Di($config);
         $di     = new DiManager($diMock);
         $di->initFactoriedServices();
-        $di->getDi()->get('myObj');
+        $di->getDI()->get('myObj');
     }
 
     public function supplyTestInitFactoriesServicesChecked()
@@ -399,9 +399,9 @@ class DiManagerTest extends TestCase
         $diMock = new Di($config);
         $di     = new DiManager($diMock);
         $di->initFactoriedServices();
-        $this->assertInstanceOf(Di::class, $di->getDi());
-        $this->assertTrue($di->getDi()->has('myObj'));
-        $this->assertInstanceOf(DateObject::class, $di->getDi()->get('myObj'));
+        $this->assertInstanceOf(Di::class, $di->getDI());
+        $this->assertTrue($di->getDI()->has('myObj'));
+        $this->assertInstanceOf(DateObject::class, $di->getDI()->get('myObj'));
 
         $config = [
             'service_manager' => [],
@@ -490,10 +490,10 @@ class DiManagerTest extends TestCase
         $di     = new DiManager($diMock);
         $di->initFactoriedServices();
 
-        $obj1 = $di->getDi()->get('myObject');
+        $obj1 = $di->getDI()->get('myObject');
         $this->assertInstanceOf(DateObject::class, $obj1);
         usleep(100000);
-        $obj2 = $di->getDi()->get('myObject');
+        $obj2 = $di->getDI()->get('myObject');
         $this->assertInstanceOf(DateObject::class, $obj2);
         $this->assertEquals($equal, $obj1->time === $obj2->time);
     }

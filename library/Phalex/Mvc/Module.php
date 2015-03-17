@@ -110,6 +110,14 @@ class Module
             }
             $moduleConfig['view'][$moduleName] = $realPathView;
         }
+        
+        if (isset($moduleConfig['volt']) && isset($moduleConfig['volt'][$moduleName]['path'])) {
+            $path = realpath($moduleConfig['volt'][$moduleName]['path']);
+            unset($moduleConfig['volt'][$moduleName]['path']);
+            if ($path) {
+                $moduleConfig['volt'][$moduleName]['path'] = $path;
+            }
+        }
 
         return $moduleConfig;
     }

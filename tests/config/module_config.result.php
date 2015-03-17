@@ -5,16 +5,24 @@ $dir = getcwd();
 return array(
     'error_handler' => [
         'options' => [
-            'views_dir' => $dir . '/tests/module/Application/config/../view/error',
+            'views_dir'    => $dir . '/tests/module/Application/config/../view/error',
             'template_500' => 'error.phtml',
             'template_404' => 'not-found.phtml'
         ],
     ],
-    'view'   => array(
+    'view'          => array(
         'Application' => $dir . '/tests/module/Application/view',
         'Backend'     => $dir . '/tests/module/Backend/view',
     ),
-    'router' => array(
+    'volt'            => [
+        'Application' => [
+            'path'         => $dir . '/tests/module/Application/compiled',
+            'extension'    => '.compiled',
+            'hierarchical' => true,
+            'always'       => true,
+        ],
+    ],
+    'router'        => array(
         'home'    => array(
             'route'       => '/',
             'definitions' => array(
@@ -71,4 +79,10 @@ return array(
             'host_name'    => 'api.test-example.com',
         ),
     ),
+    'url'           => [
+        'Application' => [
+            'uri'    => 'http://example.demo/',
+            'static' => 'http://cdn.example.demo/'
+        ],
+    ],
 );

@@ -12,6 +12,7 @@ use Phalcon\DI\FactoryDefault;
 use Phalcon\Config;
 use Phalcon\Events\Manager as EventsManager;
 use Phalex\Mvc\Dispatcher;
+use Phalcon\Mvc\View;
 
 /**
  * Control setting/getting Phalcon DI
@@ -26,6 +27,7 @@ class Di extends FactoryDefault
         $this->set('config', new Config($entireAppConfig), true);
         $this->setEventsManager();
         $this->set('dispatcher', new Dispatcher($this), true);
+        $this->set('view', new View());
     }
     
     /**
